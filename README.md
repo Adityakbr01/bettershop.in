@@ -1,329 +1,258 @@
-# SaaS Cohort Management Platform
+# BetterShop.in - E-Commerce Clothing Marketplace
 
-A comprehensive SaaS platform for managing educational cohorts where mentors can create and manage cohorts, and students can enroll, track progress, and interact within cohorts.
+A modern, full-stack e-commerce clothing marketplace built with Next.js and Node.js, featuring comprehensive user and admin functionality for browsing, purchasing, and managing clothing products.
 
 ## 🚀 Features
 
-### Core Functionality
-- **Cohort Management**: Create, manage, and organize educational cohorts
-- **User Management**: Role-based access control (Admin, Student, Instructor)
-- **Student Enrollment**: Easy enrollment and progress tracking
-- **Interactive Learning**: Student-mentor interaction within cohorts
-- **Progress Tracking**: Monitor student progress and engagement
-- **API Documentation**: Auto-generated Swagger/OpenAPI documentation
+### 👥 User Features
+- **Product Browsing**: Browse clothing items by categories, search, and filter
+- **Product Details**: View detailed product information, images, size charts, and reviews
+- **Shopping Cart**: Add/remove items, manage quantities, apply coupon codes
+- **Wishlist**: Save favorite products for later
+- **User Authentication**: Secure signup/signin with password reset functionality
+- **Order Management**: Place orders, track order status, and view order history
+- **Reviews & Ratings**: Rate and review purchased products
+- **User Profile**: Manage personal information and addresses
+- **Return Requests**: Request returns for eligible products
 
-### Technical Features
-- **Authentication & Authorization**: JWT-based authentication with role management
-- **Rate Limiting**: Built-in API rate limiting for security
-- **Real-time Logging**: Comprehensive logging with Winston
-- **Error Handling**: Global error handling with custom error classes
-- **Security**: Helmet, CORS, CSRF protection, and security headers
-- **Database**: PostgreSQL with Prisma ORM
-- **API Validation**: Zod schema validation with OpenAPI integration
+### 🔧 Admin Features
+- **Product Management**: Add, edit, delete products and variants
+- **Inventory Management**: Track stock levels, manage product variants (size, color)
+- **Category Management**: Organize products into hierarchical categories
+- **Order Management**: Process orders, update order status
+- **User Management**: View and manage user accounts
+- **Coupon Management**: Create and manage discount coupons
+- **Analytics**: Track user behavior and sales metrics
+- **Return Management**: Handle return requests and approvals
 
 ## 🛠️ Technology Stack
 
 ### Backend
 - **Runtime**: Node.js with TypeScript
-- **Framework**: Express.js
-- **Database**: PostgreSQL
-- **ORM**: Prisma
-- **Authentication**: JWT (jsonwebtoken)
-- **Validation**: Zod with OpenAPI integration
-- **Documentation**: Swagger UI
-- **Security**: Helmet, CORS, Rate Limiting
-- **Logging**: Winston with daily rotate files
-- **Process Management**: Cluster mode for scalability
+- **Framework**: Express.js with clustering support
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: JWT with bcrypt password hashing
+- **File Storage**: Cloudinary for image management
+- **Payment Processing**: Razorpay integration
+- **Email Service**: Nodemailer with Resend
+- **SMS Service**: Twilio integration
+- **API Documentation**: Swagger/OpenAPI 3.0
+- **Security**: Helmet, CORS, Rate limiting, CSRF protection
+- **Logging**: Winston with daily log rotation
+- **Monitoring**: Sentry error tracking
 
 ### Frontend
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS v4
-- **UI Components**: Radix UI primitives
+- **UI Components**: Radix UI primitives with custom components
 - **State Management**: Zustand
 - **Data Fetching**: TanStack Query (React Query)
-- **HTTP Client**: Axios
 - **Forms**: React Hook Form with Zod validation
 - **Animations**: Framer Motion
 - **Icons**: Lucide React
+- **Notifications**: React Hot Toast
 
 ### Development Tools
 - **Package Manager**: pnpm
-- **Linting**: ESLint with TypeScript support
-- **Formatting**: Prettier
-- **Build Tools**: TypeScript compiler, tsc-alias
-- **Development**: Nodemon, tsx for hot reloading
+- **Code Quality**: ESLint, Prettier
+- **Build Tools**: TypeScript compiler, Turbopack (Next.js)
+- **Database Migrations**: Prisma Migrate
+- **API Testing**: Swagger UI
 
 ## 📁 Project Structure
 
 ```
-Saas_cohort_management/
-├── Server/                     # Backend application
+betterShop.in/
+├── Server/                 # Backend application
 │   ├── src/
-│   │   ├── api/               # API documentation (OpenAPI/Swagger)
-│   │   │   ├── components/    # Reusable API components
-│   │   │   ├── paths/         # API endpoint definitions
-│   │   │   └── schemas/       # Data schemas
-│   │   ├── configs/           # Configuration files
-│   │   ├── controllers/       # Route controllers (empty - to be implemented)
-│   │   ├── db/               # Database connection
-│   │   ├── middleware/        # Express middleware
-│   │   ├── routes/           # API routes (empty - to be implemented)
-│   │   ├── services/         # Business logic services
-│   │   ├── types/            # TypeScript type definitions
-│   │   ├── utils/            # Utility functions
-│   │   ├── validator/        # Zod validation schemas
-│   │   └── server.ts         # Express server setup
-│   ├── prisma/               # Database schema and migrations
-│   ├── package.json
-│   └── index.ts              # Application entry point
-│
-├── client/                    # Frontend application
-│   ├── src/
-│   │   ├── app/              # Next.js app router pages
-│   │   ├── components/       # React components
-│   │   │   ├── ui/           # Reusable UI components
-│   │   │   ├── auth/         # Authentication components
-│   │   │   └── form/         # Form components
-│   │   ├── hooks/            # Custom React hooks
-│   │   ├── lib/              # Utility libraries
-│   │   ├── providers/        # React context providers
-│   │   ├── queries/          # TanStack Query hooks
-│   │   ├── store/            # Zustand state management
-│   │   ├── types/            # TypeScript type definitions
-│   │   └── utils/            # Utility functions
+│   │   ├── api/           # OpenAPI specifications
+│   │   ├── configs/       # Configuration files
+│   │   ├── controllers/   # Route controllers
+│   │   ├── middleware/    # Express middleware
+│   │   ├── services/      # Business logic
+│   │   ├── repository/    # Data access layer
+│   │   ├── utils/         # Utility functions
+│   │   └── server.ts      # Express app setup
+│   ├── prisma/           # Database schema and migrations
 │   └── package.json
-│
-└── README.md                 # This file
+├── client/               # Frontend application
+│   ├── src/
+│   │   ├── app/          # Next.js app router pages
+│   │   ├── components/   # Reusable UI components
+│   │   ├── lib/          # Utility libraries
+│   │   ├── hooks/        # Custom React hooks
+│   │   ├── store/        # Zustand state management
+│   │   ├── queries/      # TanStack Query hooks
+│   │   └── types/        # TypeScript type definitions
+│   └── package.json
+└── README.md
 ```
 
-## ⚙️ Installation and Setup
+## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js (v18 or higher)
 - PostgreSQL database
 - pnpm package manager
 
-### Environment Variables
+### Installation
 
-Create a `.env` file in the `Server` directory with the following variables:
-
-```env
-# Database
-DATABASE_URL="postgresql://username:password@localhost:5432/cohort_management"
-
-# Server Configuration
-PORT=3001
-NODE_ENV=development
-
-# CORS Configuration
-CORS_ORIGIN=http://localhost:3000
-CORS_ORIGIN2=http://localhost:3000
-
-# JWT Configuration (add these)
-JWT_SECRET=your-super-secret-jwt-key
-JWT_EXPIRES_IN=7d
-
-# Email Configuration (if using email features)
-SMTP_HOST=your-smtp-host
-SMTP_PORT=587
-SMTP_USER=your-email
-SMTP_PASS=your-password
-
-# Payment Integration (if using payments)
-RAZORPAY_KEY_ID=your-razorpay-key
-RAZORPAY_KEY_SECRET=your-razorpay-secret
-
-# Cloud Storage (if using file uploads)
-CLOUDINARY_CLOUD_NAME=your-cloudinary-name
-CLOUDINARY_API_KEY=your-cloudinary-key
-CLOUDINARY_API_SECRET=your-cloudinary-secret
-```
-
-Create a `.env.local` file in the `client` directory:
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
-```
-
-### Backend Setup
-
-1. **Navigate to the server directory:**
+1. **Clone the repository**
    ```bash
-   cd Server
+   git clone <repository-url>
+   cd betterShop.in
    ```
 
-2. **Install dependencies:**
+2. **Install dependencies**
    ```bash
+   # Install backend dependencies
+   cd Server
+   pnpm install
+   
+   # Install frontend dependencies
+   cd ../client
    pnpm install
    ```
 
-3. **Set up the database:**
-   ```bash
-   # Generate Prisma client
-   npx prisma generate
+3. **Environment Setup**
    
-   # Run database migrations
+   Create `.env` files in both Server and client directories:
+   
+   **Server/.env**
+   ```env
+   DATABASE_URL="postgresql://username:password@localhost:5432/bettershop"
+   JWT_SECRET="your-jwt-secret"
+   CLOUDINARY_CLOUD_NAME="your-cloudinary-name"
+   CLOUDINARY_API_KEY="your-api-key"
+   CLOUDINARY_API_SECRET="your-api-secret"
+   RAZORPAY_KEY_ID="your-razorpay-key"
+   RAZORPAY_KEY_SECRET="your-razorpay-secret"
+   CORS_ORIGIN="http://localhost:3000"
+   ```
+   
+   **client/.env.local**
+   ```env
+   NEXT_PUBLIC_API_URL="http://localhost:5000/api/v1"
+   ```
+
+4. **Database Setup**
+   ```bash
+   cd Server
    npx prisma migrate dev
+   npx prisma generate
+   ```
+
+5. **Start Development Servers**
    
-   # (Optional) Seed the database
-   npx prisma db seed
-   ```
-
-4. **Start the development server:**
-   ```bash
-   pnpm dev
-   ```
-
-The backend server will start on `http://localhost:3001`
-
-### Frontend Setup
-
-1. **Navigate to the client directory:**
-   ```bash
-   cd client
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   pnpm install
-   ```
-
-3. **Start the development server:**
-   ```bash
-   pnpm dev
-   ```
-
-The frontend application will start on `http://localhost:3000`
-
-## 🚀 Usage
-
-### Development
-
-1. **Start both servers:**
-   ```bash
-   # Terminal 1 - Backend
-   cd Server && pnpm dev
-   
-   # Terminal 2 - Frontend  
-   cd client && pnpm dev
-   ```
-
-2. **Access the application:**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:3001
-   - API Documentation: http://localhost:3001/api-docs
-
-### Production Build
-
-1. **Build the backend:**
+   **Backend** (Terminal 1):
    ```bash
    cd Server
-   pnpm build
-   pnpm start
+   pnpm dev
    ```
-
-2. **Build the frontend:**
+   
+   **Frontend** (Terminal 2):
    ```bash
    cd client
-   pnpm build
-   pnpm start
+   pnpm dev
    ```
+
+6. **Access the Application**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:5000
+   - API Documentation: http://localhost:5000/api-docs
 
 ## 📚 API Documentation
 
-The API documentation is automatically generated using Swagger/OpenAPI and is available at:
-- **Development**: http://localhost:3001/api-docs
-- **Health Check**: http://localhost:3001/api/v1/ping
+The API is fully documented using OpenAPI 3.0 specification. Access the interactive documentation at:
+- **Development**: http://localhost:5000/api-docs
+- **Production**: [Your production URL]/api-docs
 
-### API Structure
-- All API endpoints are prefixed with `/api/v1`
-- Authentication required for protected routes
-- Rate limiting: 100 requests per 15 minutes
-- Request/Response validation using Zod schemas
+### Key API Endpoints Pendings
 
-## 🔧 Development Workflow
+```
+Authentication:
+POST   /api/v1/auth/signup
+POST   /api/v1/auth/signin
+POST   /api/v1/auth/logout
 
-### Available Scripts
+Products:
+GET    /api/v1/products
+GET    /api/v1/products/:id
+POST   /api/v1/products (Admin)
+PUT    /api/v1/products/:id (Admin)
+DELETE /api/v1/products/:id (Admin)
 
-**Backend (Server directory):**
-```bash
-pnpm dev          # Start development server with hot reload
-pnpm build        # Build for production
-pnpm start        # Start production server
-pnpm lint         # Run ESLint
-pnpm lint:fix     # Fix ESLint issues
-pnpm format       # Format code with Prettier
+Cart:
+GET    /api/v1/cart
+POST   /api/v1/cart/items
+PUT    /api/v1/cart/items/:id
+DELETE /api/v1/cart/items/:id
+
+Orders:
+GET    /api/v1/orders
+POST   /api/v1/orders
+GET    /api/v1/orders/:id
+
+Admin:
+GET    /api/v1/admin/users
+GET    /api/v1/admin/orders
+GET    /api/v1/admin/analytics
 ```
 
-**Frontend (client directory):**
+## 🧪 Testing
+
 ```bash
-pnpm dev          # Start development server with Turbopack
-pnpm build        # Build for production
-pnpm start        # Start production server
-pnpm lint         # Run Next.js linting
+# Run backend tests
+cd Server
+pnpm test
+
+# Run frontend tests
+cd client
+pnpm test
 ```
 
-### Database Operations
-```bash
-# Generate Prisma client after schema changes
-npx prisma generate
+## 🚀 Deployment
 
-# Create and apply new migration
-npx prisma migrate dev --name migration_name
+### Backend Deployment
+1. Build the application: `pnpm build`
+2. Set production environment variables
+3. Run database migrations: `npx prisma migrate deploy`
+4. Start the server: `pnpm start`
 
-# Reset database (development only)
-npx prisma migrate reset
-
-# View database in Prisma Studio
-npx prisma studio
-```
+### Frontend Deployment
+1. Build the application: `pnpm build`
+2. Deploy to your preferred platform (Vercel, Netlify, etc.)
 
 ## 🤝 Contributing
 
-1. **Fork the repository**
-2. **Create a feature branch:**
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. **Make your changes and commit:**
-   ```bash
-   git commit -m "Add your feature description"
-   ```
-4. **Push to your branch:**
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-5. **Create a Pull Request**
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
 
-### Code Style Guidelines
+### Development Guidelines
 - Follow TypeScript best practices
-- Use ESLint and Prettier configurations
+- Use ESLint and Prettier for code formatting
 - Write meaningful commit messages
-- Add appropriate error handling
-- Include proper TypeScript types
-- Follow the existing project structure
+- Add tests for new features
+- Update documentation as needed
 
 ## 📄 License
 
-This project is licensed under the ISC License.
-
-## 🔮 Roadmap
-
-- [ ] Complete cohort management API implementation
-- [ ] Add user authentication and authorization
-- [ ] Implement student enrollment system
-- [ ] Add progress tracking features
-- [ ] Create mentor dashboard
-- [ ] Add real-time notifications
-- [ ] Implement payment integration
-- [ ] Add comprehensive testing suite
-- [ ] Deploy to production environment
+This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
 
 ## 📞 Support
 
-For support and questions, please create an issue in the repository or contact the development team.
+For support and questions:
+- Email: support@bettershop.in
+- Documentation: [Project Wiki](link-to-wiki)
+- Issues: [GitHub Issues](link-to-issues)
 
----
+## 🙏 Acknowledgments
 
-**Note**: This project is currently in development. The database schema shows e-commerce entities which need to be updated for cohort management functionality. Please refer to the roadmap for upcoming features and improvements and this is AI GENERATED README.
+- [Next.js](https://nextjs.org/) for the amazing React framework
+- [Prisma](https://prisma.io/) for the excellent ORM
+- [Tailwind CSS](https://tailwindcss.com/) for utility-first styling
+- [Radix UI](https://radix-ui.com/) for accessible UI primitives
