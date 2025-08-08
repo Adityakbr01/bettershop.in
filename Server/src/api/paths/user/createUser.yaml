@@ -1,0 +1,20 @@
+/users:
+  post:
+    summary: Create a new user
+    tags:
+      - Users
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+    responses:
+      '201':
+        description: User created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      '400':
+        $ref: '#/components/responses/BadRequest'

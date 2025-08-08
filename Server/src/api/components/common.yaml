@@ -1,0 +1,21 @@
+responses:
+  NotFound:
+    description: Resource not found
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+              example: "Resource not found"
+  BadRequest:
+    description: Invalid request
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+              example: "Invalid input"

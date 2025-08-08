@@ -1,0 +1,111 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "T-Shirts",
+      "slug": "t-shirts"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Basic Cotton T-Shirt",
+      "slug": "basic-cotton-tshirt",
+      "description": "High-quality cotton t-shirt",
+      "base_price": 499.0,
+      "category_id": 1,
+      "size_chart": {
+        "sizes": [
+          "S",
+          "M",
+          "L",
+          "XL"
+        ]
+      },
+      "payment_options": [
+        "cod",
+        "razorpay"
+      ],
+      "estimated_delivery_days": 5
+    }
+  ],
+  "productVariants": [
+    {
+      "id": 1,
+      "product_id": 1,
+      "sku": "TSHIRT-BLACK-M",
+      "price": 499.0,
+      "attributes": {
+        "color": "black",
+        "size": "M"
+      },
+      "stock_level": 100
+    }
+  ],
+  "inventoryStocks": [
+    {
+      "variant_id": 1,
+      "quantity_available": 100,
+      "reserved_quantity": 0,
+      "low_stock_threshold": 10
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "password_hash": "hashed_password_here",
+      "role": "user",
+      "status": "active"
+    }
+  ],
+  "wishlists": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "product_id": 1
+    }
+  ],
+  "cart": [
+    {
+      "user_id": 1,
+      "coupon_code": null
+    }
+  ],
+  "cartItems": [
+    {
+      "id": 1,
+      "cart_user_id": 1,
+      "variant_id": 1,
+      "qty": 2,
+      "price_snapshot": 499.0
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "total_amount": 998.0,
+      "shipping_address": {
+        "line1": "123 Street",
+        "city": "New Delhi",
+        "zip": "110001",
+        "country": "India"
+      },
+      "payment_method": "razorpay",
+      "status": "processing"
+    }
+  ],
+  "orderItems": [
+    {
+      "id": 1,
+      "order_id": 1,
+      "product_id": 1,
+      "variant_id": 1,
+      "name_snapshot": "Basic Cotton T-Shirt",
+      "price_snapshot": 499.0,
+      "qty": 2
+    }
+  ]
+}

@@ -1,0 +1,312 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  user
+}
+
+enum UserStatus {
+  active
+  inactive
+  suspended
+}
+
+enum NotificationType {
+  order_confirmation
+  password_reset
+  stock_alert
+}
+
+enum BehaviorType {
+  view_product
+  add_to_cart
+  remove_from_cart
+  add_to_wishlist
+  remove_from_wishlist
+  search
+  purchase
+  click_banner
+  share_product
+}
+
+enum ReturnStatus {
+  pending
+  approved
+  rejected
+  completed
+}
+
+enum DiscountType {
+  percentage
+  fixed
+}
+
+model User {
+  id                    Int        @id @default(autoincrement())
+  name                  String?
+  email                 String     @unique
+  password_hash         String?
+  mobile                String?
+  created_at            DateTime   @default(now())
+  updated_at            DateTime   @updatedAt
+  role                  Role       @default(user)
+  status                UserStatus @default(active)
+  last_login_at         DateTime?
+  last_logout_at        DateTime?
+  failed_login_attempts Int        @default(0)
+  last_failed_login_at  DateTime?
+  address               Json?
+
+  passwordResetTokens PasswordResetToken[]
+  reviews             Review[]
+  cart                Cart?
+  orders              Order[]
+  recommendations     Recommendation?
+  notifications       NotificationQueue[]
+  wishlists           Wishlist[]
+  UserBehaviorLog     UserBehaviorLog[]
+}
+
+model UserBehaviorLog {
+  id          Int          @id @default(autoincrement())
+  user        User?        @relation(fields: [user_id], references: [id])
+  user_id     Int?
+  type        BehaviorType
+  product_id  Int?
+  variant_id  Int?
+  search_term String?
+  metadata    Json?
+  created_at  DateTime     @default(now())
+}
+
+model PasswordResetToken {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  token      String
+  expires_at DateTime
+}
+
+model Wishlist {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  product    Product  @relation(fields: [product_id], references: [id])
+  product_id Int
+  created_at DateTime @default(now())
+
+  @@unique([user_id, product_id])
+}
+
+model Category {
+  id                 Int        @id @default(autoincrement())
+  name               String
+  slug               String     @unique
+  parent_category_id Int?
+  parentCategory     Category?  @relation("CategoryToCategory", fields: [parent_category_id], references: [id])
+  subcategories      Category[] @relation("CategoryToCategory")
+  products           Product[]
+}
+
+model Product {
+  id                      Int               @id @default(autoincrement())
+  name                    String
+  slug                    String            @unique
+  description             String?
+  base_price              Float
+  category_id             Int
+  category                Category          @relation(fields: [category_id], references: [id])
+  size_chart              Json?
+  created_at              DateTime          @default(now())
+  updated_at              DateTime          @updatedAt
+  images                  ProductImage[]
+  variants                ProductVariant[]
+  reviews                 Review[]
+  coupons                 CouponOnProduct[]
+  orders                  OrderItem[]
+  tags                    Tag[]             @relation("ProductTags")
+  return_policy_id        Int?
+  returnPolicy            ReturnPolicy?     @relation(fields: [return_policy_id], references: [id])
+  payment_options         String[] // ["cod", "razorpay", "stripe"]
+  estimated_delivery_days Int? // e.g. 3 = "Delivered in 3–5 days"
+  wishlists               Wishlist[]
+}
+
+model ProductImage {
+  id         Int     @id @default(autoincrement())
+  product    Product @relation(fields: [product_id], references: [id])
+  product_id Int
+  url        String
+  alt_text   String?
+  order      Int?
+}
+
+model ProductVariant {
+  id             Int             @id @default(autoincrement())
+  product        Product         @relation(fields: [product_id], references: [id])
+  product_id     Int
+  sku            String          @unique
+  price          Float
+  attributes     Json // e.g., { color: "red", size: "M" }
+  stock_level    Int?
+  rating_avg     Float?          @default(0)
+  total_reviews  Int?            @default(0)
+  inventoryStock InventoryStock?
+  orderItems     OrderItem[]
+  CartItem       CartItem[]
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  product    Product  @relation(fields: [product_id], references: [id])
+  product_id Int
+  rating     Int
+  comment    String?
+  created_at DateTime @default(now())
+}
+
+model InventoryStock {
+  variant_id          Int            @id
+  variant             ProductVariant @relation(fields: [variant_id], references: [id])
+  quantity_available  Int
+  reserved_quantity   Int            @default(0)
+  low_stock_threshold Int?
+}
+
+model CartItem {
+  id             Int            @id @default(autoincrement())
+  cart           Cart           @relation(fields: [cart_user_id], references: [user_id])
+  cart_user_id   Int
+  variant_id     Int
+  variant        ProductVariant @relation(fields: [variant_id], references: [id])
+  qty            Int
+  price_snapshot Float
+}
+
+model Cart {
+  user_id     Int        @id
+  user        User       @relation(fields: [user_id], references: [id])
+  items       CartItem[]
+  coupon_code String?
+  updated_at  DateTime   @updatedAt
+}
+
+model Order {
+  id               Int         @id @default(autoincrement())
+  user_id          Int
+  user             User        @relation(fields: [user_id], references: [id])
+  total_amount     Float
+  shipping_address Json
+  payment_method   String
+  status           String
+  created_at       DateTime    @default(now())
+  updated_at       DateTime    @updatedAt
+  items            OrderItem[]
+  payments         Payment[]
+}
+
+model OrderItem {
+  id               Int             @id @default(autoincrement())
+  order            Order           @relation(fields: [order_id], references: [id])
+  order_id         Int
+  product_id       Int
+  variant_id       Int
+  name_snapshot    String
+  price_snapshot   Float
+  qty              Int
+  ProductVariant   ProductVariant? @relation(fields: [productVariantId], references: [id])
+  productVariantId Int?
+  returnRequests   ReturnRequest[]
+  Product          Product?        @relation(fields: [productId], references: [id])
+  productId        Int?
+}
+
+model Recommendation {
+  user_id                 Int      @id
+  user                    User     @relation(fields: [user_id], references: [id])
+  recommended_product_ids Int[] // Postgres-specific array
+  created_at              DateTime @default(now())
+}
+
+model NotificationQueue {
+  id         Int              @id @default(autoincrement())
+  user       User             @relation(fields: [user_id], references: [id])
+  user_id    Int
+  type       NotificationType
+  payload    Json
+  status     String
+  created_at DateTime         @default(now())
+}
+
+model ShippingMethod {
+  id             Int     @id @default(autoincrement())
+  name           String
+  cost           Float
+  estimated_days Int
+  is_active      Boolean @default(true)
+}
+
+model Tag {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  products Product[] @relation("ProductTags")
+}
+
+model ReturnRequest {
+  id            Int          @id @default(autoincrement())
+  order_item    OrderItem    @relation(fields: [order_item_id], references: [id])
+  order_item_id Int
+  reason        String
+  status        ReturnStatus
+  created_at    DateTime     @default(now())
+}
+
+model ReturnPolicy {
+  id               Int       @id @default(autoincrement())
+  name             String // "No Return", "7-Day Return", etc.
+  description      String?
+  days             Int?
+  is_exchange_only Boolean   @default(false)
+  products         Product[]
+}
+
+model Payment {
+  id              Int      @id @default(autoincrement())
+  order           Order    @relation(fields: [order_id], references: [id])
+  order_id        Int
+  provider        String
+  provider_txn_id String
+  status          String
+  amount          Float
+  created_at      DateTime @default(now())
+}
+
+model Coupon {
+  id              Int               @id @default(autoincrement())
+  code            String            @unique
+  description     String?
+  discount_type   DiscountType
+  discount_value  Float
+  usage_limit     Int?
+  used_count      Int               @default(0)
+  expires_at      DateTime?
+  created_at      DateTime          @default(now())
+  CouponOnProduct CouponOnProduct[]
+}
+
+model CouponOnProduct {
+  id         Int     @id @default(autoincrement())
+  product    Product @relation(fields: [product_id], references: [id])
+  product_id Int
+  coupon     Coupon  @relation(fields: [coupon_id], references: [id])
+  coupon_id  Int
+}
