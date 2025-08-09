@@ -15,17 +15,9 @@
       "base_price": 499.0,
       "category_id": 1,
       "size_chart": {
-        "sizes": [
-          "S",
-          "M",
-          "L",
-          "XL"
-        ]
+        "sizes": ["S", "M", "L", "XL"]
       },
-      "payment_options": [
-        "cod",
-        "razorpay"
-      ],
+      "payment_options": ["cod", "razorpay"],
       "estimated_delivery_days": 5
     }
   ],

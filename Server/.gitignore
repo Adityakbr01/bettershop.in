@@ -1,15 +1,31 @@
-# Node.js
+# Node.js dependencies
 node_modules/
+
+# Build output
 dist/
-coverage/
-.env
-npm-debug.log*
+build/
+out/
+.next/
+.nuxt/
+.cache/
+tmp/
+temp/
 
 # Logs
 logs/
 *.log
+npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+
+# Test coverage
+coverage/
+
+# Environment variables
+.env
+.env.*
+!.env.example
 
 # Dependency directories
 jspm_packages/
@@ -18,14 +34,23 @@ jspm_packages/
 .vscode/
 .idea/
 *.sublime-workspace
+*.sublime-project
 
 # macOS
 .DS_Store
 
+# Windows
+Thumbs.db
+
 # Others
 *.swp
+*.swo
 *.bak
 *.tmp
 
+# Prisma related (schema & generated files)
+prisma/
+prisma/migrations/
 
-/generated/prisma
+# Local data
+*.local

@@ -23,7 +23,9 @@
       "@types/*": ["src/types/*"],
       "@validator/*": ["src/validator/*"],
       "@repositories/*": ["src/repositories/*"],
-       "@/*": ["src/*"]
+       "@/*": ["src/*"],
+       "@db": ["prisma"],
+       "@prisma/*": ["prisma/*"]
     },
     "outDir": "dist", // compiled JS files
     "allowJs": true,

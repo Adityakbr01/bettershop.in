@@ -3,13 +3,15 @@ import cors from "cors";
 import express, { Application } from "express";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
-import compression from "compression"
+import compression from "compression";
 import morgan from "morgan";
-import swaggerUi from "swagger-ui-express"
-import { errorHandler, notFoundHandler } from "./middleware/globalMiddleware";
+import swaggerUi from "swagger-ui-express";
+import errorHandler, { notFoundHandler } from "./middleware/globalMiddleware";
 import swaggerSpec from "@configs/swagger";
 import { constant } from "./configs/_Config";
-
+import authRouter from "@routes/auth.router";
+import passport from "passport";
+import "./passport/github"
 
 
 const Server: Application = express();
@@ -29,7 +31,7 @@ const limiter = rateLimit({
 Server.use(limiter);
 
 const allowedOrigins = [
-  process.env.CORS_ORIGIN, // "http://www.edulaunch.shop"
+  process.env.CORS_ORIGIN,
   process.env.CORS_ORIGIN2?.replace(/\/$/, "")
 ].filter(Boolean);
 
@@ -49,9 +51,11 @@ Server.use(
 );
 
 Server.use(cookieParser());
-Server.use(compression())
+Server.use(compression());
 Server.use(helmet());
 Server.use(morgan("combined"));
+Server.use(express.json());
+Server.use(passport.initialize());
 
 // Server.use("/api/v1/payments",paymentRouter)
 
@@ -66,7 +70,7 @@ Server.use((req, res, next) => {
     express.json({ limit: "24kb" })(req, res, next);
   }
 });
-
+Server.use(express.json({ limit: "24kb" }));
 Server.use(express.urlencoded({ extended: true, limit: "24kb" }));
 
 Server.use((_, res, next) => {
@@ -79,10 +83,9 @@ Server.use((_, res, next) => {
   next();
 });
 
-
 // ✅ API Docs
 // Swagger UI setup
-Server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+Server.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // ✅ Health Check
 Server.get("/", (_, res) => {
@@ -90,7 +93,7 @@ Server.get("/", (_, res) => {
 });
 
 // ✅ Routes
-//Student Routes
+Server.use("/api/v1/auth", authRouter);
 
 //---------------CRON JOB API------------
 // ✅ Keep-alive / Cron Ping route

@@ -4,3 +4,11 @@
 *.ts text eol=lf
 *.json text eol=lf
 *.yaml text eol=lf
+
+node_modules/** binary
+dist/** binary
+coverage/** binary
+logs/** binary
+build/** binary
+prisma/** binary
+prisma/migrations/** binary
