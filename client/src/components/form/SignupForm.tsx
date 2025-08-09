@@ -14,6 +14,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { useSignup } from '@/queries/auth/mutations';
+import toast from 'react-hot-toast';
+import { useNavigate } from '@/utils/navigation';
+import { Routes } from '@/constants';
 
 const signupSchema = z
   .object({
@@ -29,6 +33,11 @@ const signupSchema = z
 type SignupFormData = z.infer<typeof signupSchema>;
 
 export default function SignupForm() {
+
+  const { mutate: signup, isPending, isSuccess, error } = useSignup();
+  const { goTo } = useNavigate()
+
+
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -40,7 +49,19 @@ export default function SignupForm() {
 
   const onSubmit = async (data: SignupFormData) => {
     console.log('Email signup data:', data);
-    // await fetch(...) — future API integration
+    console.log("Email signup data:", data);
+
+    signup(data, {
+      onSuccess: (res) => {
+        console.log("Signup success:", res);
+        toast.success("Signup success")
+        goTo(`${Routes.rootRoute + Routes.SIGNIN}`)
+      },
+      onError: (err) => {
+        console.error("Signup failed:", err);
+      },
+    })
+
   };
 
   return (
@@ -106,9 +127,9 @@ export default function SignupForm() {
         <Button
           type="submit"
           className="w-full my-2 bg-white text-black cursor-pointer"
-          disabled={form.formState.isSubmitting}
+          disabled={isPending}
         >
-          {form.formState.isSubmitting ? (
+          {isPending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Signing Up...

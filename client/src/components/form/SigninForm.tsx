@@ -8,6 +8,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useSignin } from "@/queries/auth/mutations";
+import toast from "react-hot-toast";
+import { useNavigate } from "@/utils/navigation";
+import { Routes } from "@/constants";
 
 const signinSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -17,6 +21,9 @@ const signinSchema = z.object({
 type SigninFormData = z.infer<typeof signinSchema>;
 
 export default function SigninForm() {
+  const { mutate: signin, isPending, isSuccess, error } = useSignin()
+  const { goTo } = useNavigate()
+
   const form = useForm<SigninFormData>({
     resolver: zodResolver(signinSchema),
     defaultValues: { email: "", password: "" },
@@ -24,6 +31,16 @@ export default function SigninForm() {
 
   const onSubmit = async (data: SigninFormData) => {
     console.log("Signin data:", data);
+    signin(data, {
+      onSuccess: (res) => {
+        console.log("Signup success:", res);
+        toast.success(`Welcome ${res.data.name || res.data.email}`)
+        goTo(`${Routes.rootRoute}`)
+      },
+      onError: (err) => {
+        console.error("Signup failed:", err);
+      },
+    })
   };
 
   return (
@@ -68,9 +85,9 @@ export default function SigninForm() {
         <Button
           type="submit"
           className="w-full my-2 bg-white text-black hover:shadow transition-shadow"
-          disabled={form.formState.isSubmitting}
+          disabled={isPending}
         >
-          {form.formState.isSubmitting ? (
+          {isPending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Signing In...

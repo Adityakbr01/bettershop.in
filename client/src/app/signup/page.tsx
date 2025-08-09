@@ -16,9 +16,16 @@ import { Routes } from "@/constants";
 export default function SignupPage() {
 
   const handleSocialSignup = (provider: "github" | "google") => {
-    // signIn(provider, { callbackUrl: "/dashboard" });
-    console.log("Signing in with ", provider);
+    console.log(provider)
+    if (provider === "github") {
+      window.location.href = "http://localhost:3001/api/v1/auth/github";
+    }
+    if (provider === "google") {
+      window.location.href = "/api/auth/google"; // if you have Google set up
+    }
   };
+
+  
 
   return (
     <div className="w-full relative h-screen flex items-center justify-center p-2 font-NeuMechina">

@@ -10,7 +10,13 @@ import SocialAuth from "@/components/form/SocialAuth";
 
 export default function SigninPage() {
   const handleSocialSignup = (provider: "github" | "google") => {
-    // signIn(provider, { callbackUrl: "/dashboard" });
+    console.log(provider)
+    if (provider === "github") {
+      window.location.href = "http://localhost:3001/api/v1/auth/github";
+    }
+    if (provider === "google") {
+      window.location.href = "/api/auth/google"; // if you have Google set up
+    }
   };
 
   return (

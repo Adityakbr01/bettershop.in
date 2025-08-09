@@ -9,6 +9,7 @@ export const APP_CONSTANTS = {
 
 
 export const Routes = {
+  rootRoute: "http://localhost:3000",
   HOME: "/",
   SIGNIN: "/signin",
   SIGNUP: "/signup",
