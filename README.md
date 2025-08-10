@@ -175,6 +175,9 @@ Authentication:
 POST   /api/v1/auth/signup
 POST   /api/v1/auth/signin
 POST   /api/v1/auth/logout
+POST   /api/v1/auth/github
+POST   /api/v1/auth/google
+
 
 Products:
 GET    /api/v1/products
