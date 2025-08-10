@@ -100,7 +100,7 @@ passport.use(
         const jwtToken = generateAuthToken({ id: user.id, email: user.email });
         return done(null, { user, jwtToken });
       } catch (err) {
-        return done(err, null);
+        return done(err, false);
       }
     }
   )

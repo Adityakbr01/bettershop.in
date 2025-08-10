@@ -21,6 +21,11 @@ interface GitHubAuthUser {
     jwtToken: string;
 }
 
+interface GoogleAuthUser {
+  user: User;
+  jwtToken: string;
+}
+
 authRouter.get(
     "/github/callback",
     passport.authenticate("github", { failureRedirect: "/login", session: false }),
@@ -46,6 +51,29 @@ authRouter.get(
         // })
     }
 );
+
+
+// Google OAuth Routes
+authRouter.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"], session: false })
+);
+
+
+
+authRouter.get(
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login", session: false }),
+  (req, res) => {
+    const { jwtToken } = req.authInfo as unknown as GoogleAuthUser;
+
+    res.cookie("accessToken", jwtToken, getCookieConfig());
+
+    // Redirect to frontend after successful login
+    res.redirect(constant.ENV.CORS_ORIGIN);
+  }
+);
+
 
 // Local Auth Routes
 authRouter.post(

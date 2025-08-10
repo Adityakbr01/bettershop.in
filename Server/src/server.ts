@@ -12,6 +12,7 @@ import { constant } from "./configs/_Config";
 import authRouter from "@routes/auth.router";
 import passport from "passport";
 import "./passport/github"
+import "./passport/google"
 
 
 const Server: Application = express();

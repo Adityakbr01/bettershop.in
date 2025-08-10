@@ -82,3 +82,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+
+  /auth/google:
+    post:
+      tags:
+        - Auth
+      summary: User signup/login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - Google Login
+              properties:
+      responses:
+        "201/200":
+          description: User created successfully/User Login successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"

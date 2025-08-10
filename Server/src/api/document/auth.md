@@ -6,7 +6,10 @@
   "email": "string",
   "password": "string"
 ```
-**Response (201):**- Returns created user object
+**Response (201):**
+- set accesToken on cookie
+
+
 
 ## Signin**Endpoint:** `POST /auth/signin`
 **Request Body:** 
@@ -16,19 +19,41 @@
   "password": "string"
 }
 ```
+**Response (200):** 
+- set accesToken on cookie
 
-**Response (200):**- Returns user object and JWT token
+
+
+
 ## Github Auth**Endpoint:** `POST /auth/github`
 **Request Body:**- Github login credentials
 **Response (200/201):**
+- set accesToken on cookie
 
+## Google Auth**Endpoint:** `POST /auth/google`
+**Request Body:**- Google login credentials
+**Response (200/201):**
+- set accesToken on cookie
 
-- Returns user object on successful login/signup
-## Logout**Endpoint:** `POST /auth/logout`
-**Response (200):**- Clears authentication token
 
 ## Get Current User**Endpoint:** `GET /auth/me`
 **Response (200):**- Returns current authenticated user details
+
+
+## Logout**Endpoint:** `POST /auth/logout`
+**Response (200):**- Clears authentication token
+
+
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+
 
 
 ## Authentication Flow
@@ -37,22 +62,6 @@
 3. Token is included in Authorization header for protected routes
 3. User can logout to invalidate token
 4. /auth/me endpoint can be used to verify authentication status
-
-
-&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;
-
-
-
-# *Pending Routes
-### Google Auth**Endpoint:** `POST /auth/google`
-**Request Body:**- Google login credentials
-**Response (200/201):**
-
-
-
-
 
 
 
