@@ -1,19 +1,20 @@
 "use client";
 
-import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { withGuest } from "@/components/auth/withGuest";
 import SignupForm from "@/components/form/SignupForm";
 import SocialAuth from "@/components/form/SocialAuth";
 import RadialGlowBackground from "@/components/GlowBox";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Routes } from "@/constants";
+import Link from "next/link";
 
-export default function SignupPage() {
+ function SignupPage() {
 
   const handleSocialSignup = (provider: "github" | "google") => {
     console.log(provider)
@@ -21,11 +22,11 @@ export default function SignupPage() {
       window.location.href = "http://localhost:3001/api/v1/auth/github";
     }
     if (provider === "google") {
-      window.location.href = "/api/auth/google"; // if you have Google set up
+      window.location.href = "http://localhost:3001/api/v1/auth/google";
     }
   };
 
-  
+
 
   return (
     <div className="w-full relative h-screen flex items-center justify-center p-2 font-NeuMechina">
@@ -51,3 +52,5 @@ export default function SignupPage() {
     </div>
   );
 }
+
+export default withGuest(SignupPage);

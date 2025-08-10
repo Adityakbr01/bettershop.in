@@ -83,7 +83,7 @@ export const useLogout = () => {
 };
 
 export const useMe = () => {
-  return useQuery<any, Error>({
+  return useQuery<any, any>({
     queryKey: ["auth"],
     queryFn: meFn
   });

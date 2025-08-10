@@ -1,30 +1,36 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Routes } from "@/constants";
 import { useMe } from "@/queries/auth/mutations";
 import { useAuthStore } from "@/store/authStore";
+import { useNavigate } from "@/utils/navigation";
+import Link from "next/link";
 
 export default function Home() {
-  const { data } = useMe();
+  const { goTo } = useNavigate()
+  const { data, error } = useMe();
   const { user, setUser } = useAuthStore();
 
-  // Jab bhi `data` update ho, store me set karo
   if (data?.data && user?.id !== data.data.id) {
     setUser(data.data);
   }
 
   return (
     <div>
-      <h1>Ping Response</h1>
-      <Button>Increase Bears</Button>
-
+      <h2>Working hai Brother</h2>
       {user && (
         <div>
+
           <p>Name: {user.name}</p>
           <p>Email: {user.email}</p>
           <p>Role: {user.role}</p>
+
         </div>
       )}
+
+      <Link href={Routes.SIGNIN}>Sign In</Link>
+      <Link href={Routes.SIGNUP}>Sign up</Link>
+      <Link href={"/dashboard"}>Sign up</Link>
     </div>
   );
 }

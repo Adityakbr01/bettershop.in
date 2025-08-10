@@ -3,19 +3,35 @@
 
 import RadialGlowBackground from "@/components/GlowBox";
 import Link from "next/link";
-import { Routes } from "@/constants";
+import { APP_CONSTANTS, Routes } from "@/constants";
 import AuthCardWrapper from "@/components/form/AuthCardWrapper";
 import SigninForm from "@/components/form/SigninForm";
 import SocialAuth from "@/components/form/SocialAuth";
+import { useAuthStore } from "@/store/authStore";
+import { useNavigate } from "@/utils/navigation";
+import toast from "react-hot-toast";
+import { withAuth } from "@/components/auth/withAuth";
+import { withGuest } from "@/components/auth/withGuest";
 
-export default function SigninPage() {
+ function SigninPage() {
+  const { user } = useAuthStore();
+  const { goTo } = useNavigate()
+
+  if (user) {
+    goTo("/", {
+      replace: true
+    })
+    toast("⚠️ You are already logged in");
+    return null;
+  }
+
   const handleSocialSignup = (provider: "github" | "google") => {
     console.log(provider)
     if (provider === "github") {
-      window.location.href = "http://localhost:3001/api/v1/auth/github";
+      window.location.href = APP_CONSTANTS.ENV.GITHUB_URL;
     }
     if (provider === "google") {
-      window.location.href = "/api/auth/google"; // if you have Google set up
+      window.location.href = APP_CONSTANTS.ENV.GOOGLE_URL;
     }
   };
 
@@ -35,3 +51,5 @@ export default function SigninPage() {
     </div>
   );
 }
+
+export default withGuest(SigninPage);

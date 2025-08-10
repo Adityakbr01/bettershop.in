@@ -11,6 +11,7 @@ type User = {
 };
 
 type AuthState = {
+  token: string | null; //Todo 
   user: User | null;
   setUser: (user: User | null) => void;
   clearUser: () => void;
@@ -18,6 +19,7 @@ type AuthState = {
 
 // Zustand store
 export const useAuthStore = create<AuthState>((set) => ({
+  token: null,
   user: null,
   setUser: (user) => set({ user }),
   clearUser: () => set({ user: null }),
