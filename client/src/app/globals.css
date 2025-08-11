@@ -18,19 +18,14 @@
   font-display: swap;
 }
 
-
 html, body {
   font-family: 'NeuMechina', sans-serif;
 }
 
-
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
 @custom-variant dark (&:is(.dark *));
-
-
 
 @theme inline {
   --color-background: var(--background);
@@ -151,6 +146,30 @@ html, body {
 }
 
 
+@layer base {
+  :root {
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+  }
+
+  .dark {
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.439 0 0);
+  }
+}
+
 /* Custom bg */
 
 .cbg1{
@@ -160,13 +179,13 @@ html, body {
   background: #eeb0db;
 }
 .cbg3{
-  background: #9f8fce;
+  background: #b39cf8;
 }
 .cbg4{
-  background: #a3ecd8;
+  background: #129d78;
 }
 .cbg5{
-  background: rgb(255, 115, 0, 1);
+  background: #ff7300;
 }
 .cbg6{
   background: #f5fc35;

@@ -7,20 +7,26 @@ import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useSignin } from "@/queries/auth/mutations";
 import toast from "react-hot-toast";
 import { useNavigate } from "@/utils/navigation";
 import { Routes } from "@/constants";
+import { useState } from "react";
+import motion from "framer-motion";
 
 const signinSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
+
+
 type SigninFormData = z.infer<typeof signinSchema>;
 
 export default function SigninForm() {
+  const [showPassword, setShowPassword] = useState(false);
+
   const { mutate: signin, isPending, isSuccess, error } = useSignin()
   const { goTo } = useNavigate()
 
@@ -71,12 +77,21 @@ export default function SigninForm() {
             <FormItem>
               <FormLabel className="text-white">Password</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  placeholder="Enter your password"
-                  className="bg-gray-800 text-white placeholder-gray-500"
-                  {...field}
-                />
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    className="bg-gray-800 text-white placeholder-gray-500 pr-10"
+                    {...field}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

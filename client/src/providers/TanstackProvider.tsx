@@ -1,5 +1,7 @@
 "use client";
 
+import { AdminDashboardSidebar } from "@/components/AdminDashboardSidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactNode, useState } from "react";
@@ -28,9 +30,11 @@ export const TanstackProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <QueryClientProvider client={client}>
-      <Toaster position="top-right"
-        reverseOrder={false} />
-      {children}
+      <SidebarProvider>
+        <Toaster position="top-right"
+          reverseOrder={false} />
+        {children}
+      </SidebarProvider>
       <ReactQueryDevtools position="bottom" initialIsOpen={false} />
     </QueryClientProvider>
   );

@@ -20,17 +20,15 @@ export default function Home() {
       <h2>Working hai Brother</h2>
       {user && (
         <div>
-
           <p>Name: {user.name}</p>
           <p>Email: {user.email}</p>
           <p>Role: {user.role}</p>
-
         </div>
       )}
 
       <Link href={Routes.SIGNIN}>Sign In</Link>
       <Link href={Routes.SIGNUP}>Sign up</Link>
-      <Link href={"/dashboard"}>Sign up</Link>
+      <Link href={"/admin/dashboard"}>admin Dashboard</Link>
     </div>
   );
 }
