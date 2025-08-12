@@ -20,6 +20,7 @@ export type UserInfo = {
   name: string | null;
   role: string;
   status: string;
+  token: string;
 };
 
 export type AuthResponse = {

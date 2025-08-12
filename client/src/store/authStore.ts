@@ -1,26 +1,32 @@
 // stores/authStore.ts
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-type User = {
+export type User = {
   id: number;
   email: string;
   name: string | null;
-  created_at: string;
   role: string;
   status: string;
 };
 
 type AuthState = {
-  token: string | null; //Todo 
   user: User | null;
   setUser: (user: User | null) => void;
   clearUser: () => void;
 };
 
-// Zustand store
-export const useAuthStore = create<AuthState>((set) => ({
-  token: null,
-  user: null,
-  setUser: (user) => set({ user }),
-  clearUser: () => set({ user: null }),
-}));
+// Zustand store with persist
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      setUser: (user) => set({ user }),
+      clearUser: () => set({ user: null }),
+    }),
+    {
+      name: "auth-storage", // key for localStorage
+      partialize: (state) => ({ user: state.user }),
+    }
+  )
+);

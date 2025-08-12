@@ -15,7 +15,7 @@ export const APP_CONSTANTS = {
     FRONTEND_URL: "http://localhost:3000",
     GOOGLE_URL: "http://localhost:3001/api/v1/auth/google",
     GITHUB_URL: "http://localhost:3001/api/v1/auth/github",
-    ACCESSTOKEN_EXPIRES_IN: 60 * 60 * 1000 // 15 min
+    ACCESSTOKEN_EXPIRES_IN: 60 * 60 * 1000 // 60 min
   }
 };
 
