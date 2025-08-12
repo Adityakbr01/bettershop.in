@@ -16,6 +16,10 @@ export const APP_CONSTANTS = {
     GOOGLE_URL: "http://localhost:3001/api/v1/auth/google",
     GITHUB_URL: "http://localhost:3001/api/v1/auth/github",
     ACCESSTOKEN_EXPIRES_IN: 60 * 60 * 1000 // 60 min
+  },
+  userRole : {
+    ADMIN:"admin",
+    USER:"user"
   }
 };
 

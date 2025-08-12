@@ -1,6 +1,11 @@
-import DashboardWithSidebar from "@/components/shadcn-dashboard"
+"use client"
 
-export default function DashboardLayout({
+import ProtectedRoute from "@/components/auth/ProtectedRoute"
+import { withAuth } from "@/components/auth/withAuth"
+import DashboardWithSidebar from "@/components/shadcn-dashboard"
+import { APP_CONSTANTS } from "@/constants"
+
+function DashboardLayout({
     children,
 }: {
     children: React.ReactNode
@@ -11,8 +16,13 @@ export default function DashboardLayout({
             <DashboardWithSidebar />
             {/* Main content */}
             <main className="flex-1 p-6 bg-background">
-                {children}
+                <ProtectedRoute allowedRoles={[APP_CONSTANTS.userRole.USER]}>
+                    {children}
+                </ProtectedRoute>
             </main>
         </div>
     )
 }
+
+
+export default withAuth(DashboardLayout)
