@@ -7,8 +7,8 @@ import { useNavigate } from "@/utils/navigation";
 import Link from "next/link";
 
 export default function Home() {
-  const { goTo } = useNavigate()
-  const { data, error } = useMe();
+
+  const { data } = useMe();
   const { user, setUser } = useAuthStore();
 
   if (data?.data && user?.id !== data.data.id) {

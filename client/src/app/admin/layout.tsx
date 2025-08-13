@@ -11,16 +11,15 @@ function DashboardLayout({
     children: React.ReactNode
 }) {
     return (
-        <div className="flex min-h-screen">
-            {/* Sidebar */}
+        <div className="flex min-h-screen w-full">
             <DashboardWithSidebar />
-            {/* Main content */}
-            <main className="flex-1 p-6 bg-background">
+            <div className="flex-1">
                 <ProtectedRoute allowedRoles={[APP_CONSTANTS.userRole.USER]}>
                     {children}
                 </ProtectedRoute>
-            </main>
+            </div>
         </div>
+
     )
 }
 

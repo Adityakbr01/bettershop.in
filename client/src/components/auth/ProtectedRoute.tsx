@@ -32,7 +32,10 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
     checkAuth();
   }, [user, allowedRoles]);
 
-  if (loading) return null;
+  if (loading || !user) {
+    return <div className="w-full h-screen flex items-center justify-center">Loading...</div>;
+  }
+
 
   return <>{children}</>;
 }

@@ -1,6 +1,7 @@
 // queries/auth/mutations.ts
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { useAuthStore } from "@/store/authStore";
 
 // -------------------- Types --------------------
 export type SignupPayload = {
@@ -47,9 +48,18 @@ export const logoutFn = async (): Promise<{ message: string }> => {
 
 
 const meFn = async (): Promise<any> => {
-  const res = await api.get<any>("/auth/me");
-  return res.data;
+  try {
+    const res = await api.get<any>("/auth/me");
+    return res.data;
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      // session expire → clear store
+      useAuthStore.getState().clearUser();
+    }
+    throw error;
+  }
 };
+
 
 
 // -------------------- React Query Hooks --------------------
@@ -86,6 +96,7 @@ export const useLogout = () => {
 export const useMe = () => {
   return useQuery<any, any>({
     queryKey: ["auth"],
-    queryFn: meFn
+    queryFn: meFn,
+    retry:false,
   });
 };

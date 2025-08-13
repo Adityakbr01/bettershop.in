@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 type NavigateOptions = {
   query?: Record<string, string>;
@@ -20,12 +20,14 @@ function buildUrl(path: string, query?: Record<string, string>) {
 }
 
 export function useNavigate() {
+  // 🛡 Server guard
+  if (typeof window === "undefined") {
+    return { goTo: () => {}, back: () => {} }; // No-op on server
+  }
+
   const router = useRouter();
 
-  const goTo = (
-    path: string,
-    options: NavigateOptions = {}
-  ) => {
+  const goTo = (path: string, options: NavigateOptions = {}) => {
     const {
       query,
       delay = 0,
@@ -53,5 +55,5 @@ export function useNavigate() {
     router.back();
   };
 
-  return { goTo, back };
+  return { goTo, back }; // ✅ Always return this on client
 }
