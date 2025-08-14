@@ -1,7 +1,9 @@
 "use client";
 
+import ProductDialog from "@/components/admin/Products/ProductDialog";
 import ProductHeader from "@/components/admin/Products/ProductHeader";
-import { Badge } from "@/components/ui/badge";
+import ProductItemTable from "@/components/admin/Products/ProductItem";
+import { MotionButton } from "@/components/motion-button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -11,24 +13,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { products } from "@/constants/mockData/products";
+import { motion } from "framer-motion";
 import React from "react";
-import ProductItemTable from "../../../components/admin/Products/ProductItem";
-import { Button } from "@/components/ui/button";
-
-
-
-
 
 export default function Page() {
   const [search, setSearch] = React.useState("");
   const [categoryFilter, setCategoryFilter] = React.useState("");
   const [activeFilter, setActiveFilter] = React.useState("");
+  const [showDialog, setShowDialog] = React.useState(false);
 
   const filteredProducts = products?.filter((p) => {
     const matchesSearch =
       p.title.toLowerCase().includes(search.toLowerCase()) ||
       p.sku.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = categoryFilter ? p.category === categoryFilter : true;
+    const matchesCategory = categoryFilter
+      ? p.category === categoryFilter
+      : true;
     const matchesActive = activeFilter
       ? activeFilter === "true"
         ? p.active
@@ -38,11 +38,12 @@ export default function Page() {
   });
 
   return (
-    <div className="w-full min-h-screen p-6 text-white">
+    <motion.div layout className="w-full min-h-screen p-6 text-white">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <h1 className="text-3xl font-extrabold my-6">Products Overview</h1>
         <ProductHeader />
+
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6 justify-between">
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -52,7 +53,9 @@ export default function Page() {
               onChange={(e) => setSearch(e.target.value)}
               className="max-w-xs"
             />
-            <Select onValueChange={(v) => setCategoryFilter(v === "all" ? "" : v)}>
+            <Select
+              onValueChange={(v) => setCategoryFilter(v === "all" ? "" : v)}
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Filter by Category" />
               </SelectTrigger>
@@ -64,7 +67,9 @@ export default function Page() {
               </SelectContent>
             </Select>
 
-            <Select onValueChange={(v) => setActiveFilter(v === "all" ? "" : v)}>
+            <Select
+              onValueChange={(v) => setActiveFilter(v === "all" ? "" : v)}
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Filter by Status" />
               </SelectTrigger>
@@ -76,10 +81,22 @@ export default function Page() {
             </Select>
           </div>
 
-          <Button className="cursor-pointer ">Add Product</Button>
+          {/* Morphing button */}
+          {!showDialog && (
+            <MotionButton
+              layoutId="add-product-dialog"
+              onClick={() => setShowDialog(true)}
+            >
+              Add Product
+            </MotionButton>
+          )}
         </div>
+
         <ProductItemTable filteredProducts={filteredProducts} />
+
+        {/* Add Product Dialog */}
+        <ProductDialog showDialog={showDialog} setShowDialog={setShowDialog} />
       </div>
-    </div>
+    </motion.div>
   );
 }

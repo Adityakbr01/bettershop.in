@@ -12,6 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import CouponHeader from "@/components/admin/Coupons/CouponHeader";
 import CouponTable, { Coupon } from "@/components/admin/Coupons/CouponTable";
+import CouponDialog from "@/components/admin/Coupons/CouponDialog";
+import { MotionButton } from "@/components/motion-button";
 
 
 // Mock Coupons Data
@@ -54,6 +56,8 @@ const coupons: Coupon[] = [
 export default function CouponPage() {
   const [search, setSearch] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState("");
+  const [showDialog, setShowDialog] = React.useState(false);
+
 
   const filteredCoupons = coupons.filter((c) => {
     const matchesSearch =
@@ -96,11 +100,19 @@ export default function CouponPage() {
             </Select>
           </div>
 
-          <Button className="cursor-pointer">Create Coupon</Button>
+          <MotionButton
+            layoutId="add-coupon-dialog"
+            onClick={() => setShowDialog(true)}
+            whileTap={{ scale: 0.97 }}
+            className="cursor-pointer">Create Coupon</MotionButton>
         </div>
 
         {/* Coupon Table */}
         <CouponTable coupons={filteredCoupons} />
+
+        {/* Create Coupon Dialog */}
+        <CouponDialog showDialog={showDialog} setShowDialog={setShowDialog} />
+
       </div>
     </div>
   );

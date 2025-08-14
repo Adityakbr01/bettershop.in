@@ -60,9 +60,9 @@ export default function OrderTable({
             filteredOrders.map((order, idx) => (
               <motion.tr
                 key={order.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 0, y: 10,filter: "blur(10px)" }}
+                animate={{ opacity: 1, y: 0,filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -10,filter: "blur(10px)" }}
                 transition={{ delay: idx * 0.05, duration: 0.3 }}
               >
                 <TableCell className="font-medium">{order.id}</TableCell>

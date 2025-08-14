@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 
 import PromotionalHeader from "@/components/admin/Promotionals/PromotionalHeader";
 import PromotionalTable, { Promotional } from "@/components/admin/Promotionals/PromotionalTable";
+import PromotionalDialog from "@/components/admin/Promotionals/PromotionalDialog";
+import { MotionButton } from "@/components/motion-button";
 
 // Mock Promotionals Data
 const promotionals: Promotional[] = [
@@ -54,6 +56,8 @@ const promotionals: Promotional[] = [
 export default function PromotionalsPage() {
   const [search, setSearch] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState("");
+  const [showDialog, setShowDialog] = React.useState(false);
+
 
   const filteredPromotionals = promotionals.filter((p) => {
     const matchesSearch =
@@ -96,11 +100,17 @@ export default function PromotionalsPage() {
             </Select>
           </div>
 
-          <Button className="cursor-pointer">Create Promotional</Button>
+          <MotionButton
+            layoutId="add-Promotional-dialog"
+            onClick={() => setShowDialog(true)}
+            className="cursor-pointer">Create Promotional</MotionButton>
         </div>
 
         {/* Promotionals Table */}
         <PromotionalTable filteredPromotionals={filteredPromotionals} />
+
+
+        <PromotionalDialog showDialog={showDialog} setShowDialog={setShowDialog} />
       </div>
     </div>
   );
