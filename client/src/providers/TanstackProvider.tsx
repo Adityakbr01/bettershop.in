@@ -31,7 +31,7 @@ export const TanstackProvider = ({ children }: { children: ReactNode }) => {
   return (
     <QueryClientProvider client={client}>
       <SidebarProvider>
-        <Toaster position="top-left"
+        <Toaster position="top-right"
           reverseOrder={false} />
         {children}
       </SidebarProvider>

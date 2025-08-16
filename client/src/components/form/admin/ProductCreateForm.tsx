@@ -1,0 +1,190 @@
+import React from "react";
+import { FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
+import IsCreatingLoader from "@/components/isCreatingLoader";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ProductFormValues } from "@/validator/ProductCreate.schema";
+
+interface ProductCreateFormProps {
+  handleSubmit: (cb: (data: ProductFormValues) => void) => (e?: React.BaseSyntheticEvent) => void;
+  onSubmit: (data: ProductFormValues) => void;
+  register: UseFormRegister<ProductFormValues>;
+  errors: FieldErrors<ProductFormValues>;
+  watch: UseFormWatch<ProductFormValues>;
+  setValue: UseFormSetValue<ProductFormValues>;
+  isProductCreating: boolean;
+  setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  CategorysData?: { data: { id: number; name: string }[] };
+}
+
+// ✅ Added sku, stock, and active
+function ProductCreateForm({
+  handleSubmit,
+  onSubmit,
+  register,
+  errors,
+  watch,
+  setValue,
+  isProductCreating,
+  setShowDialog,
+  CategorysData,
+}: ProductCreateFormProps) {
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {/* Name */}
+      <div className="flex flex-col gap-1">
+        <Label>Name</Label>
+        <Input placeholder="Product Name" {...register("name")} />
+        {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+      </div>
+
+      {/* Slug */}
+      <div className="flex flex-col gap-1">
+        <Label>Slug</Label>
+        <Input placeholder="unique-product-slug" {...register("slug")} />
+        {errors.slug && <p className="text-red-500 text-sm">{errors.slug.message}</p>}
+      </div>
+
+      {/* SKU */}
+      <div className="flex flex-col gap-1">
+        <Label>SKU</Label>
+        <Input placeholder="Unique product code" {...register("sku")} />
+        {errors.sku && <p className="text-red-500 text-sm">{errors.sku.message}</p>}
+      </div>
+
+      {/* Description */}
+      <div className="flex flex-col gap-1">
+        <Label>Description</Label>
+        <Input placeholder="Short description" {...register("description")} />
+        {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
+      </div>
+
+      {/* Base Price */}
+      <div className="flex flex-col gap-1">
+        <Label>Base Price</Label>
+        <Input type="number" {...register("base_price", { valueAsNumber: true })} />
+        {errors.base_price && <p className="text-red-500 text-sm">{errors.base_price.message}</p>}
+      </div>
+
+      {/* Stock */}
+      <div className="flex flex-col gap-1">
+        <Label>Stock</Label>
+        <Input type="number" {...register("stock", { valueAsNumber: true })} />
+        {errors.stock && <p className="text-red-500 text-sm">{errors.stock.message}</p>}
+      </div>
+
+      {/* Active */}
+      <div className="flex items-center gap-2">
+        <Checkbox
+          checked={watch("active")}
+          onCheckedChange={(checked) => setValue("active", Boolean(checked))}
+          id="active"
+        />
+        <Label htmlFor="active">Active</Label>
+        {errors.active && <p className="text-red-500 text-sm">{errors.active.message as string}</p>}
+      </div>
+
+      {/* Category */}
+      <div className="flex flex-col gap-1">
+        <Label>Category</Label>
+        <Select onValueChange={(value) => setValue("category_id", Number(value))}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select category" />
+          </SelectTrigger>
+          <SelectContent>
+            {CategorysData?.data.map((cat) => (
+              <SelectItem key={cat.id} value={String(cat.id)}>
+                {cat.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors.category_id && <p className="text-red-500 text-sm">{errors.category_id.message}</p>}
+      </div>
+
+      {/* Size Chart */}
+      <div className="flex flex-col gap-1">
+        <Label>Size Chart URL</Label>
+        <Input placeholder="https://example.com/size-chart" {...register("size_chart")} />
+        {errors.size_chart && (
+          <p className="text-red-500 text-sm">{errors.size_chart.message as string}</p>
+        )}
+      </div>
+
+      {/* Payment Options */}
+      <div>
+        <Label className="mb-2 block">Payment Options</Label>
+        <div className="flex gap-4">
+          {["cod", "razorpay", "stripe"].map((option) => (
+            <div key={option} className="flex items-center gap-2">
+              <Checkbox
+                checked={watch("payment_options").includes(option as any)}
+                onCheckedChange={(checked) => {
+                  const current = watch("payment_options");
+                  if (checked) {
+                    setValue("payment_options", [...current, option] as any);
+                  } else {
+                    setValue(
+                      "payment_options",
+                      current.filter((p) => p !== option) as any
+                    );
+                  }
+                }}
+                id={option}
+              />
+              <Label htmlFor={option} className="capitalize">
+                {option}
+              </Label>
+            </div>
+          ))}
+        </div>
+        {errors.payment_options && (
+          <p className="text-red-500 text-sm">{errors.payment_options.message}</p>
+        )}
+      </div>
+
+      {/* Estimated Delivery Days */}
+      <div className="flex flex-col gap-1">
+        <Label>Estimated Delivery Days</Label>
+        <Input
+          type="number"
+          {...register("estimated_delivery_days", { valueAsNumber: true })}
+        />
+        {errors.estimated_delivery_days && (
+          <p className="text-red-500 text-sm">{errors.estimated_delivery_days.message}</p>
+        )}
+      </div>
+
+      {/* Buttons */}
+      <div className="flex justify-end gap-3 mt-4">
+        <Button
+          disabled={isProductCreating}
+          variant="outline"
+          type="button"
+          onClick={() => setShowDialog(false)}
+        >
+          Cancel
+        </Button>
+
+        <Button
+          disabled={isProductCreating}
+          type="submit"
+          className="bg-blue-500 text-white hover:bg-blue-600 flex items-center gap-2"
+        >
+          {isProductCreating ? <IsCreatingLoader /> : "Save Product"}
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+export default ProductCreateForm;

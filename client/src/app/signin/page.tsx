@@ -2,9 +2,9 @@
 "use client";
 
 import { withGuest } from "@/components/auth/withGuest";
-import AuthCardWrapper from "@/components/form/AuthCardWrapper";
-import SigninForm from "@/components/form/SigninForm";
-import SocialAuth from "@/components/form/SocialAuth";
+import AuthCardWrapper from "@/components/form/auth/AuthCardWrapper";
+import SigninForm from "@/components/form/auth/SigninForm";
+import SocialAuth from "@/components/form/auth/SocialAuth";
 import RadialGlowBackground from "@/components/GlowBox";
 import { APP_CONSTANTS, Routes } from "@/constants";
 import { useAuthStore } from "@/store/authStore";

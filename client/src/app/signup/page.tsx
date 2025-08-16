@@ -1,9 +1,9 @@
 "use client";
 
 import { withGuest } from "@/components/auth/withGuest";
-import AuthCardWrapper from "@/components/form/AuthCardWrapper";
-import SignupForm from "@/components/form/SignupForm";
-import SocialAuth from "@/components/form/SocialAuth";
+import AuthCardWrapper from "@/components/form/auth/AuthCardWrapper";
+import SignupForm from "@/components/form/auth/SignupForm";
+import SocialAuth from "@/components/form/auth/SocialAuth";
 import RadialGlowBackground from "@/components/GlowBox";
 import { APP_CONSTANTS, Routes } from "@/constants";
 import { motion } from "framer-motion";

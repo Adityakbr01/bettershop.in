@@ -18,6 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { ProductItemRes } from "@/queries/products/mutation";
 
 type Product = {
   title: string;
@@ -29,7 +30,7 @@ type Product = {
 };
 
 type ProductItemTableProps = {
-  filteredProducts: Product[];
+  filteredProducts: ProductItemRes[];
 };
 
 function getStockBadge(stock: number) {
@@ -64,14 +65,14 @@ export default function ProductItemTable({
             filteredProducts.map((p, idx) => (
               <motion.tr
                 key={idx}
-                initial={{ opacity: 0, y: 10,filter: "blur(10px)" }}
-                animate={{ opacity: 1, y: 0 ,filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -10,filter: "blur(10px)" }}
+                initial={{ opacity: 0, y: 10, filter: "blur(10px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -10, filter: "blur(10px)" }}
                 transition={{ delay: idx * 0.05, duration: 0.3 }}
               >
-                <TableCell className="font-medium">{p.title}</TableCell>
+                <TableCell className="font-medium">{p.name}</TableCell>
                 <TableCell>{p.sku}</TableCell>
-                <TableCell>{p.category}</TableCell>
+                <TableCell>{p.category?.name}</TableCell>
                 <TableCell>
                   {p.active ? (
                     <Badge className="bg-green-500">Active</Badge>
@@ -79,7 +80,7 @@ export default function ProductItemTable({
                     <Badge className="bg-gray-400">Inactive</Badge>
                   )}
                 </TableCell>
-                <TableCell>₹{p.price.toFixed(2)}</TableCell>
+                <TableCell>₹{p.base_price.toFixed(2)}</TableCell>
                 <TableCell>{getStockBadge(p.stock)}</TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>

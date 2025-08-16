@@ -170,6 +170,17 @@ html, body {
   }
 }
 
+
+/* styles/global.css or wherever you include your global CSS */
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 /* Custom bg */
 
 .cbg1{

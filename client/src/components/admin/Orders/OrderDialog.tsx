@@ -12,7 +12,11 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 
 import { Button } from '@/components/ui/button';
-import { DialogProps } from '../Products/ProductDialog';
+
+export interface DialogProps {
+    showDialog: boolean;
+    setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 function OrderDialog({ showDialog, setShowDialog }: DialogProps) {
   return (
