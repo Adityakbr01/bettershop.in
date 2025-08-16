@@ -1,0 +1,55 @@
+Product:
+  type: object
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+    slug:
+      type: string
+    description:
+      type: string
+      nullable: true
+    base_price:
+      type: number
+    sku:
+      type: string
+    stock:
+      type: integer
+    active:
+      type: boolean
+    created_at:
+      type: string
+      format: date-time
+    updated_at:
+      type: string
+      format: date-time
+    category_id:
+      type: integer
+
+ProductCreateInput:
+  type: object
+  properties:
+    name:
+      type: string
+    slug:
+      type: string
+    description:
+      type: string
+    base_price:
+      type: number
+    category_id:
+      type: integer
+    sku:
+      type: string
+    stock:
+      type: integer
+    active:
+      type: boolean
+  required:
+    - name
+    - slug
+    - base_price
+    - category_id
+    - sku
+    - stock

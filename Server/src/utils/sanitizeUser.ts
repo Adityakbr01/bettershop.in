@@ -1,9 +1,5 @@
 import { User } from "@prisma/client";
 
-/**
- * Picks only the allowed fields from the User object.
- * Type-safe, null-safe, and works with Partial<User>.
- */
 export const sanitizeUser = <K extends keyof User>(
   user: User,
   allowedFields: K[]

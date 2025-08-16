@@ -30,7 +30,12 @@ const swaggerDefinition = {
 // Load schema and component files explicitly
 const schemas = {};
 const responses = {};
-const schemaFiles = [path.join(__dirname, "./../api/schemas/user.yaml")];
+const schemaFiles = [
+  path.join(__dirname, "./../api/schemas/user.yaml"),
+  path.join(__dirname, "./../api/schemas/product.yaml"),
+  path.join(__dirname, "./../api/schemas/category.yaml"),
+];
+
 const componentFiles = [
   path.join(__dirname, "./../api/components/common.yaml")
 ];

@@ -177,14 +177,14 @@ POST   /api/v1/auth/signin
 POST   /api/v1/auth/logout
 POST   /api/v1/auth/github
 POST   /api/v1/auth/google
+GET    /api/v1/auth/me
 
 
 Products:
-GET    /api/v1/products
-GET    /api/v1/products/:id
-POST   /api/v1/products (Admin)
-PUT    /api/v1/products/:id (Admin)
-DELETE /api/v1/products/:id (Admin)
+POST    /api/v1/products/create (Admin)
+GET     /api/v1/products/
+POST    /api/v1/products/category/create (Admin)
+GET     /api/v1/products/category
 
 Cart:
 GET    /api/v1/cart

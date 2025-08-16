@@ -1,21 +1,54 @@
-responses:
-  NotFound:
-    description: Resource not found
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            error:
-              type: string
-              example: "Resource not found"
-  BadRequest:
-    description: Invalid request
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            error:
-              type: string
-              example: "Invalid input"
+/auth/me:
+  post:
+    tags:
+      - Auth
+    summary: Fetch logged-in user (from cookie access token)
+    security:
+      - cookieAuth: []   # 👈 auth required
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+    responses:
+      "201":
+        description: User fetched successfully
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      "400":
+        $ref: "#/components/responses/BadRequest"
+      "404":
+        $ref: "#/components/responses/NotFound"
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken  
+
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Resource not found"
+
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Invalid input"

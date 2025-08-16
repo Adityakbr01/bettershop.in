@@ -9,7 +9,8 @@ import swaggerUi from "swagger-ui-express";
 import errorHandler, { notFoundHandler } from "./middleware/globalMiddleware";
 import swaggerSpec from "@configs/swagger";
 import { constant } from "./configs/_Config";
-import authRouter from "@routes/auth.router";
+import authRouter from "@routes/auth.route";
+import productsRouter from "@routes/products.route";
 import passport from "passport";
 import "./passport/github"
 import "./passport/google"
@@ -95,6 +96,8 @@ Server.get("/", (_, res) => {
 
 // ✅ Routes
 Server.use("/api/v1/auth", authRouter);
+Server.use("/api/v1/products", productsRouter);
+
 
 //---------------CRON JOB API------------
 // ✅ Keep-alive / Cron Ping route

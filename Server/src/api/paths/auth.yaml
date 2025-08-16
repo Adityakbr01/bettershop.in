@@ -104,3 +104,23 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+/auth/me:
+  post:
+    tags:
+      - Auth
+    summary: Fetch logged-in user (from cookie access token)
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+    responses:
+      "201":
+        description: User fetched successfully
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+    security:
+      - cookieAuth: []   # 🔑 cookie-based auth

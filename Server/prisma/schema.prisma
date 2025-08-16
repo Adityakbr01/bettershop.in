@@ -34,7 +34,7 @@ enum BehaviorType {
   purchase
   click_banner
   share_product
- oauth_login 
+  oauth_login
   manual_login
   logout
 }
@@ -143,6 +143,11 @@ model Product {
   payment_options         String[] // ["cod", "razorpay", "stripe"]
   estimated_delivery_days Int? // e.g. 3 = "Delivered in 3–5 days"
   wishlists               Wishlist[]
+
+  //New filed
+  active Boolean @default(true)
+  stock  Int     @default(0)
+  sku    String  @default("") // ya agar har product ka unique SKU chahiye to @unique
 }
 
 model ProductImage {

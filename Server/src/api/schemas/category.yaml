@@ -1,0 +1,21 @@
+Category:
+  type: object
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+    created_at:
+      type: string
+      format: date-time
+    updated_at:
+      type: string
+      format: date-time
+
+CategoryCreateInput:
+  type: object
+  properties:
+    name:
+      type: string
+  required:
+    - name
