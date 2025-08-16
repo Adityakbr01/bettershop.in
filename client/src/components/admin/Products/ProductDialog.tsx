@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import ProductCreateForm from "@/components/form/admin/ProductCreateForm";
+import ProductCreateForm from "@/components/form/admin/products/ProductCreateForm";
 import { useCreateProduct, useGetCategory } from "@/queries/products/mutation";
 import { ProductFormValues, ProductSchema } from "@/validator/ProductCreate.schema";
 import { useState } from "react";
@@ -43,8 +43,6 @@ export default function ProductDialog({ showDialog, setShowDialog }: DialogProps
             size_chart: "",
             payment_options: [],
             estimated_delivery_days: 3,
-            active: true,
-            stock: 0,
             sku: "",
         },
     });
@@ -60,6 +58,7 @@ export default function ProductDialog({ showDialog, setShowDialog }: DialogProps
     };
 
     const onSubmit = (data: ProductFormValues) => {
+        console.log("Working")
         if (data.base_price < 100) {
             setFormData(data);
             setShowConfirm(true);

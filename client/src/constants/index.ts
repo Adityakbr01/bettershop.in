@@ -85,3 +85,8 @@ export const Routes = {
   PROFILE: "/profile",
 }
 
+//Verient Sizes
+export const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+
+//Payment option
+export const payment_options = ["cod", "razorpay", "stripe"] as const;

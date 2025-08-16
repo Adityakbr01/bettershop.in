@@ -1,4 +1,5 @@
 // queries/products/mutations.ts
+import { payment_options } from "@/constants";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -20,6 +21,10 @@ export type CategoryResponse = {
   data: CategoryItem[];
 };
 
+// Type for a single payment option
+export type PaymentOption = typeof payment_options[number];
+
+
 export type ProductItemRes = {
   id: number;
   name: string;
@@ -31,7 +36,7 @@ export type ProductItemRes = {
   created_at: string;
   updated_at: string;
   return_policy_id: number | null;
-  payment_options: string[];
+   payment_options: PaymentOption[];
   estimated_delivery_days: number;
   active: boolean,
   stock: number,
@@ -42,6 +47,7 @@ export type ProductItemRes = {
     slug: string,
     parent_category_id: number
   }
+  variants: VariantItem[];
 }
 
 
@@ -60,6 +66,27 @@ export type ProductsRes = {
   message: string;
   data: ProductItemRes[];
   timestamp: string;
+};
+
+
+// -------------------- Variant Types --------------------
+
+export type VariantItem = {
+  id: number;
+  product_id: number;
+  stock_level: number;
+  price: number;
+  sku: string;
+  attributes?: Record<string, any>; // e.g. { size: "M", color: "Red" }
+};
+
+export type VariantRes = {
+  id: number;
+  product_id: number;
+  sku: string;
+  price: number;
+  attributes: { name: string; sku: string; size: string };
+  stock_level: number;
 };
 
 // -------------------- API Calls --------------------
@@ -95,6 +122,41 @@ const getProducts = async (): Promise<any> => {
   }
 };
 
+const addVariantFn = async (data: {
+  productId: number;
+  stock_level: number;
+  price: number;
+  attributes: { name: string; sku: string; size: string };
+}) => {
+  const res = await api.post<VariantRes>("/products/variant/add", data);
+  return res.data;
+};
+const updateProductFn = async (data: {
+  productId: number;
+  stock_level?: number;
+  price?: number;
+  attributes?: { name?: string; sku?: string; size?: string };
+  active?:boolean
+}) => {
+  const { productId, ...rest } = data;
+  
+  // Filter out undefined / empty fields
+  const filteredData: any = {};
+  Object.entries(rest).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      filteredData[key] = value;
+    }
+  });
+  const res = await api.put<VariantRes>(`/products/${productId}`, filteredData);
+  return res.data;
+};
+
+const deleteProductFn = async (productId: number) => {
+    const res = await api.delete<VariantRes>(`/products/${productId}`);
+    return res.data;
+};
+
+
 
 // -------------------- React Query Hooks --------------------
 
@@ -123,3 +185,33 @@ export const useGetProducts = () => {
     retry: false,
   });
 };
+
+export const useAddVariant = () => {
+  const queryClient = useQueryClient();
+  return useMutation<VariantRes, Error, {
+    productId: number;
+    stock_level: number;
+    price: number;
+    attributes: { name: string; sku: string; size: string };
+  }>({
+    mutationFn: addVariantFn,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
+  });
+};
+export const useUpdateProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateProductFn,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
+  });
+};
+
+export const useDeleteProduct = ()=>{
+   const queryClient = useQueryClient();
+   return useMutation({
+    mutationFn: deleteProductFn,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
+  }); 
+}
+
+

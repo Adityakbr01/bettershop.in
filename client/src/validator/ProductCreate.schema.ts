@@ -47,8 +47,8 @@ export const ProductSchema = z.object({
 
     // ✅ New Fields
     sku: z.string().min(1, "SKU is required"),
-    stock: z.number().int().nonnegative("Stock must be ≥ 0"),
-    active: z.boolean(),
+    stock: z.number().int().nonnegative("Stock must be ≥ 0").optional(),
+    active: z.boolean().optional(),
 });
 
 

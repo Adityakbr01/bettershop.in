@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ProductFormValues } from "@/validator/ProductCreate.schema";
+import { payment_options } from "@/constants";
 
 interface ProductCreateFormProps {
   handleSubmit: (cb: (data: ProductFormValues) => void) => (e?: React.BaseSyntheticEvent) => void;
@@ -75,24 +76,6 @@ function ProductCreateForm({
         {errors.base_price && <p className="text-red-500 text-sm">{errors.base_price.message}</p>}
       </div>
 
-      {/* Stock */}
-      <div className="flex flex-col gap-1">
-        <Label>Stock</Label>
-        <Input type="number" {...register("stock", { valueAsNumber: true })} />
-        {errors.stock && <p className="text-red-500 text-sm">{errors.stock.message}</p>}
-      </div>
-
-      {/* Active */}
-      <div className="flex items-center gap-2">
-        <Checkbox
-          checked={watch("active")}
-          onCheckedChange={(checked) => setValue("active", Boolean(checked))}
-          id="active"
-        />
-        <Label htmlFor="active">Active</Label>
-        {errors.active && <p className="text-red-500 text-sm">{errors.active.message as string}</p>}
-      </div>
-
       {/* Category */}
       <div className="flex flex-col gap-1">
         <Label>Category</Label>
@@ -124,7 +107,7 @@ function ProductCreateForm({
       <div>
         <Label className="mb-2 block">Payment Options</Label>
         <div className="flex gap-4">
-          {["cod", "razorpay", "stripe"].map((option) => (
+          {payment_options.map((option) => (
             <div key={option} className="flex items-center gap-2">
               <Checkbox
                 checked={watch("payment_options").includes(option as any)}
