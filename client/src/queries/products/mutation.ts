@@ -36,7 +36,7 @@ export type ProductItemRes = {
   created_at: string;
   updated_at: string;
   return_policy_id: number | null;
-   payment_options: PaymentOption[];
+  payment_options: PaymentOption[];
   estimated_delivery_days: number;
   active: boolean,
   stock: number,
@@ -91,6 +91,11 @@ export type VariantRes = {
 
 // -------------------- API Calls --------------------
 
+
+// -------------------- Category API Calls --------------------
+
+
+
 const getCategoryFn = async (): Promise<CategoryResponse> => {
   try {
     const res = await api.get<CategoryResponse>("/products/category");
@@ -103,6 +108,26 @@ const getCategoryFn = async (): Promise<CategoryResponse> => {
     throw error;
   }
 };
+
+const createCategoryFn = async (data: any): Promise<any> => {
+  const res = await api.post<CategoryResponse>(`/products/category/create`, data);
+  return res.data;
+};
+
+const updateCategoryFn = async (data: any): Promise<any> => {
+  const res = await api.put<CategoryResponse>(`/products/category/${data.id}`, data);
+  return res.data;
+};
+const deletCategoryFn = async (id: any): Promise<any> => {
+  const res = await api.delete<CategoryResponse>(`/products/category/${id}`);
+  return res.data;
+};
+
+
+
+// -------------------- Prodcuts API Calls --------------------
+
+
 
 export const createProductFn = async (data: any): Promise<ProductRes> => {
   const res = await api.post<ProductRes>("/products/create", data);
@@ -122,24 +147,16 @@ const getProducts = async (): Promise<any> => {
   }
 };
 
-const addVariantFn = async (data: {
-  productId: number;
-  stock_level: number;
-  price: number;
-  attributes: { name: string; sku: string; size: string };
-}) => {
-  const res = await api.post<VariantRes>("/products/variant/add", data);
-  return res.data;
-};
+
 const updateProductFn = async (data: {
   productId: number;
   stock_level?: number;
   price?: number;
   attributes?: { name?: string; sku?: string; size?: string };
-  active?:boolean
+  active?: boolean
 }) => {
   const { productId, ...rest } = data;
-  
+
   // Filter out undefined / empty fields
   const filteredData: any = {};
   Object.entries(rest).forEach(([key, value]) => {
@@ -152,66 +169,226 @@ const updateProductFn = async (data: {
 };
 
 const deleteProductFn = async (productId: number) => {
-    const res = await api.delete<VariantRes>(`/products/${productId}`);
-    return res.data;
+  const res = await api.delete<VariantRes>(`/products/${productId}`);
+  return res.data;
 };
 
+// -------------------- Variant API Calls --------------------
+
+
+
+const addVariantFn = async (data: {
+  productId: number;
+  stock_level: number;
+  price: number;
+  attributes: { name: string; sku: string; size: string };
+}) => {
+  const res = await api.post<VariantRes>("/products/variant/add", data);
+  return res.data;
+};
+
+const getVarientsFn = async (productId: number) => {
+  try {
+    const res = await api.get<any>(`/products/${productId}/variants`);
+    return res.data;
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      useAuthStore.getState().clearUser();
+    }
+    throw error;
+  }
+};
+
+
+// Update a variant
+const updateVariantFn = async (variantId: number, data: {
+  stock_level?: number;
+  price?: number;
+  attributes?: { name?: string; sku?: string; size?: string };
+}) => {
+  const filteredData: any = {};
+  Object.entries(data).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) filteredData[key] = value;
+  });
+
+  console.log(filteredData,variantId)
+
+  const res = await api.put(`/products/variant/${variantId}`, filteredData);
+  return res.data;
+};
+
+// Delete a variant
+const deleteVariantFn = async (variantId: number) => {
+  const res = await api.delete(`/products/variant/${variantId}`);
+  return res.data;
+};
+
+// Get single variant by ID
+const getVariantByIdFn = async (variantId: number) => {
+  try {
+    const res = await api.get(`/products/variant/${variantId}`);
+    return res.data;
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      useAuthStore.getState().clearUser();
+    }
+    throw error;
+  }
+};
 
 
 // -------------------- React Query Hooks --------------------
 
-export const useGetCategory = () => {
-  return useQuery<CategoryResponse, Error>({
-    queryKey: ["category"],
-    queryFn: getCategoryFn,
+
+
+
+// -------------------- Category Hook --------------------
+
+
+export const useCreateCategory = () => {
+    const queryClient = useQueryClient();
+    return useMutation<any, Error, any>({
+      mutationFn: createCategoryFn,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["category"] });
+      },
+    });
+  };
+
+  export const useGetCategory = () => {
+    return useQuery<CategoryResponse, Error>({
+      queryKey: ["category"],
+      queryFn: getCategoryFn,
+      retry: false,
+    });
+  };
+
+
+  export const useUpdateCategory = () => {
+    const queryClient = useQueryClient();
+    return useMutation<any, Error, any>({
+      mutationFn: updateCategoryFn,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["category"] });
+      },
+    });
+  };
+
+  export const useDeleteCategory = () => {
+    const queryClient = useQueryClient();
+    return useMutation<any, Error, any>({
+      mutationFn: deletCategoryFn,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["category"] });
+      },
+    });
+  };
+
+
+
+
+  // -------------------- Product Hook --------------------
+
+  export const useCreateProduct = () => {
+    const queryClient = useQueryClient();
+    return useMutation<ProductRes, Error, any>({
+      mutationFn: createProductFn,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["products"] });
+      },
+    });
+  };
+
+  export const useGetProducts = () => {
+    return useQuery<ProductsRes, Error>({
+      queryKey: ["products"],
+      queryFn: getProducts,
+      retry: false,
+    });
+  };
+
+
+  export const useUpdateProduct = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: updateProductFn,
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
+    });
+  };
+
+
+
+  export const useDeleteProduct = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: deleteProductFn,
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
+    });
+  }
+
+
+
+  // -------------------- Variant Hook --------------------
+
+  export const useAddVariant = () => {
+    const queryClient = useQueryClient();
+    return useMutation<VariantRes, Error, {
+      productId: number;
+      stock_level: number;
+      price: number;
+      attributes: { name: string; sku: string; size: string };
+    }>({
+      mutationFn: addVariantFn,
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
+    });
+  };
+
+
+export const useGetVarients = (productId: number) => {
+  return useQuery({
+    queryKey: ["variants", productId], // key now includes productId
+    queryFn: () => getVarientsFn(productId),
+    enabled: !!productId, // only run if productId is truthy
     retry: false,
   });
 };
 
-export const useCreateProduct = () => {
+
+// Hook for updating variant
+export const useUpdateVariant = () => {
   const queryClient = useQueryClient();
-  return useMutation<ProductRes, Error, any>({
-    mutationFn: createProductFn,
+  return useMutation({
+    mutationFn: ({ variantId, data }: { variantId: number; data: any }) =>
+      updateVariantFn(variantId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["variants"] });
     },
   });
 };
 
-export const useGetProducts = () => {
-  return useQuery<ProductsRes, Error>({
-    queryKey: ["products"],
-    queryFn: getProducts,
+// Hook for deleting variant
+export const useDeleteVariant = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (variantId: number) => deleteVariantFn(variantId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["variants"] });
+    },
+  });
+};
+
+// Hook for getting a single variant
+export const useGetVariantById = (variantId: number) => {
+  return useQuery({
+    queryKey: ["variant", variantId],
+    queryFn: () => getVariantByIdFn(variantId),
+    enabled: !!variantId, // Only fetch if variantId is valid
     retry: false,
   });
 };
 
-export const useAddVariant = () => {
-  const queryClient = useQueryClient();
-  return useMutation<VariantRes, Error, {
-    productId: number;
-    stock_level: number;
-    price: number;
-    attributes: { name: string; sku: string; size: string };
-  }>({
-    mutationFn: addVariantFn,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
-  });
-};
-export const useUpdateProduct = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: updateProductFn,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
-  });
-};
 
-export const useDeleteProduct = ()=>{
-   const queryClient = useQueryClient();
-   return useMutation({
-    mutationFn: deleteProductFn,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["products"] }),
-  }); 
-}
 
 

@@ -1,7 +1,6 @@
 // app/signin/page.tsx
 "use client";
 
-import { withGuest } from "@/components/auth/withGuest";
 import AuthCardWrapper from "@/components/form/auth/AuthCardWrapper";
 import SigninForm from "@/components/form/auth/SigninForm";
 import SocialAuth from "@/components/form/auth/SocialAuth";
@@ -11,23 +10,12 @@ import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "@/utils/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import toast from "react-hot-toast";
 
 
 // ✅ Wrap shadcn Card so it can be animated
 
 
 function SigninPage() {
-  const { user } = useAuthStore();
-  const { goTo } = useNavigate()
-
-  if (user) {
-    goTo("/", {
-      replace: true
-    })
-    toast("⚠️ You are already logged in");
-    return null;
-  }
 
   const handleSocialSignup = (provider: "github" | "google") => {
     if (provider === "github") {
@@ -59,4 +47,4 @@ function SigninPage() {
   );
 }
 
-export default withGuest(SigninPage);
+export default SigninPage;

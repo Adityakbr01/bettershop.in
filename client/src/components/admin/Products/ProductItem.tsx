@@ -22,6 +22,8 @@ import { useState } from "react";
 import AddProductVeriant from "./AddProductVeriantDialog";
 import { getStockBadge } from "@/components/getStockBadge";
 import EditProductDialog from "./EditProductDialog";
+import VariantDialog from "./VariantDialog";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 
 type ProductItemTableProps = {
   filteredProducts: ProductItemRes[];
@@ -35,12 +37,15 @@ export default function ProductItemTable({
   const { mutateAsync: updateProduct } = useUpdateProduct();
   const { mutateAsync: deleteProduct } = useDeleteProduct();
 
-  const [selectedProduct, setSelectedProduct] = useState<ProductItemRes | null>(
-    null
-  );
+  const [selectedProduct, setSelectedProduct] = useState<ProductItemRes | null>(null);
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState<ProductItemRes | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [showVariantDialog, setShowVariantDialog] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+  const [showConfirm, setShowConfirm] = useState(false)
+  const [productToDelete, setProductToDelete] = useState<ProductItemRes | null>(null);
+
 
   const handleEdit = (product: ProductItemRes) => {
     setEditProduct(product);
@@ -54,9 +59,22 @@ export default function ProductItemTable({
   };
 
 
-  const handleDeleteProduct =(productId:number)=>{
-    deleteProduct(productId)
-  }
+  const handleDeleteProduct = (product: ProductItemRes) => {
+    setProductToDelete(product);
+    setShowConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (productToDelete) {
+      await deleteProduct(productToDelete.id);
+      setProductToDelete(null);
+      setShowConfirm(false);
+    }
+  };
+  const openVariantDialog = (productId: number) => {
+    setSelectedProductId(productId);
+    setShowVariantDialog(true);
+  };
 
   return (
     <>
@@ -111,9 +129,18 @@ export default function ProductItemTable({
                         >
                           Add Variant
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-500" onClick={()=>handleDeleteProduct(p.id)}>
+                        <DropdownMenuItem
+                          onClick={() => openVariantDialog(p.id)}
+                        >
+                          Manage Variants
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-red-500"
+                          onClick={() => handleDeleteProduct(p)}
+                        >
                           Delete
                         </DropdownMenuItem>
+
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -139,6 +166,26 @@ export default function ProductItemTable({
         setOpen={setEditOpen}
         product={editProduct!}
       />
+
+
+      <VariantDialog
+        showDialog={showVariantDialog}
+        setShowDialog={setShowVariantDialog}
+        productId={selectedProductId ?? 0}
+      />
+
+      {/* Delete Confirmation */}
+
+      <ConfirmDialog
+        open={showConfirm}
+        onOpenChange={setShowConfirm}
+        title="Delete Product"
+        description={`Are you sure you want to delete "${productToDelete?.name}"? This action cannot be undone.`}
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+        onConfirm={confirmDelete}
+      />
+
 
     </>
   );

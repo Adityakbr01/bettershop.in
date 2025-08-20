@@ -1,9 +1,12 @@
 "use client";
 
+import CategoryDialog from "@/components/admin/Products/CategoryDialog";
 import ProductDialog from "@/components/admin/Products/ProductDialog";
 import ProductHeader from "@/components/admin/Products/ProductHeader";
 import ProductItemTable from "@/components/admin/Products/ProductItem";
+import VariantDialog from "@/components/admin/Products/VariantDialog";
 import { MotionButton } from "@/components/motion-button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -21,10 +24,12 @@ export default function Page() {
   const [categoryFilter, setCategoryFilter] = React.useState("");
   const [activeFilter, setActiveFilter] = React.useState("");
   const [showDialog, setShowDialog] = React.useState(false);
+  const [showcategory, setShowcategory] = React.useState(false);
+
 
   // API call
   const { data } = useGetProducts();
-  const products = data?.data ?? []; 
+  const products = data?.data ?? [];
 
 
   const categories = Array.from(
@@ -50,10 +55,10 @@ export default function Page() {
     return matchesSearch && matchesCategory && matchesActive;
   });
 
-    // header stats
+  // header stats
   const total = products.length;
   const active = products.filter((p) => p.active).length;
-  const lowStock = products.filter((p) => p.stock > 0 && p.stock <= 5).length; 
+  const lowStock = products.filter((p) => p.stock > 0 && p.stock <= 5).length;
   const outOfStock = products.filter((p) => p.stock === 0).length;
 
 
@@ -62,7 +67,7 @@ export default function Page() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <h1 className="text-3xl font-extrabold my-6">Products Overview</h1>
-       <ProductHeader 
+        <ProductHeader
           total={total}
           active={active}
           lowStock={lowStock}
@@ -114,20 +119,29 @@ export default function Page() {
             </Select>
           </div>
 
-          {/* Morphing button */}
-          {!showDialog && (
-            <MotionButton
-              layoutId="add-product-dialog"
-              onClick={() => setShowDialog(true)}
-            >
-              Add Product
-            </MotionButton>
-          )}
+          {/* Add Product Button */}
+          <div className="flex gap-2">
+            {!showDialog && (
+              <MotionButton
+                layoutId="add-product-dialog"
+                onClick={() => setShowDialog(true)}
+              >
+                Add Product
+              </MotionButton>
+            )}
+
+
+            <CategoryDialog
+              showDialog={showcategory}
+              setShowDialog={setShowcategory}
+            />
+
+          </div>
+
         </div>
 
         {/* Products Table */}
         <ProductItemTable filteredProducts={filteredProducts} />
-
         {/* Add Product Dialog */}
         <ProductDialog showDialog={showDialog} setShowDialog={setShowDialog} />
       </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
 import IsCreatingLoader from "@/components/isCreatingLoader";
@@ -5,13 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProductFormValues } from "@/validator/ProductCreate.schema";
 import { payment_options } from "@/constants";
 
@@ -24,10 +20,52 @@ interface ProductCreateFormProps {
   setValue: UseFormSetValue<ProductFormValues>;
   isProductCreating: boolean;
   setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
-  CategorysData?: { data: { id: number; name: string }[] };
+  CategorysData?: { data: { id: number; name: string; parent_category_id: number | null }[] };
 }
 
-// ✅ Added sku, stock, and active
+// Helper types
+interface CategoryType {
+  id: number;
+  name: string;
+  parent_category_id: number | null;
+  subcategories?: CategoryType[];
+}
+
+// Build hierarchy
+const buildHierarchy = (categories: CategoryType[]) => {
+  const map = new Map<number, CategoryType & { subcategories: CategoryType[] }>();
+  const roots: (CategoryType & { subcategories: CategoryType[] })[] = [];
+
+  categories.forEach((c) => map.set(c.id, { ...c, subcategories: [] }));
+
+  map.forEach((c) => {
+    if (c.parent_category_id && map.has(c.parent_category_id)) {
+      map.get(c.parent_category_id)?.subcategories!.push(c);
+    } else {
+      roots.push(c);
+    }
+  });
+
+  return roots;
+};
+
+// Recursive SelectItem for hierarchy
+const CategoryOption = ({ category, level }: { category: CategoryType; level: number }) => {
+  const hasChildren = category.subcategories && category.subcategories.length > 0;
+
+  return (
+    <>
+      <SelectItem value={String(category.id)} disabled={hasChildren}>
+        {`${"— ".repeat(level)}${category.name}${hasChildren ? " (Parent)" : ""}`}
+      </SelectItem>
+      {category.subcategories?.map((sub) => (
+        <CategoryOption key={sub.id} category={sub} level={level + 1} />
+      ))}
+    </>
+  );
+};
+
+
 function ProductCreateForm({
   handleSubmit,
   onSubmit,
@@ -39,6 +77,8 @@ function ProductCreateForm({
   setShowDialog,
   CategorysData,
 }: ProductCreateFormProps) {
+  const hierarchicalCategories = CategorysData?.data ? buildHierarchy(CategorysData.data) : [];
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Name */}
@@ -84,10 +124,8 @@ function ProductCreateForm({
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
-            {CategorysData?.data.map((cat) => (
-              <SelectItem key={cat.id} value={String(cat.id)}>
-                {cat.name}
-              </SelectItem>
+            {hierarchicalCategories.map((cat) => (
+              <CategoryOption key={cat.id} category={cat} level={0} />
             ))}
           </SelectContent>
         </Select>
@@ -98,9 +136,6 @@ function ProductCreateForm({
       <div className="flex flex-col gap-1">
         <Label>Size Chart URL</Label>
         <Input placeholder="https://example.com/size-chart" {...register("size_chart")} />
-        {errors.size_chart && (
-          <p className="text-red-500 text-sm">{errors.size_chart.message as string}</p>
-        )}
       </div>
 
       {/* Payment Options */}
@@ -130,21 +165,12 @@ function ProductCreateForm({
             </div>
           ))}
         </div>
-        {errors.payment_options && (
-          <p className="text-red-500 text-sm">{errors.payment_options.message}</p>
-        )}
       </div>
 
       {/* Estimated Delivery Days */}
       <div className="flex flex-col gap-1">
         <Label>Estimated Delivery Days</Label>
-        <Input
-          type="number"
-          {...register("estimated_delivery_days", { valueAsNumber: true })}
-        />
-        {errors.estimated_delivery_days && (
-          <p className="text-red-500 text-sm">{errors.estimated_delivery_days.message}</p>
-        )}
+        <Input type="number" {...register("estimated_delivery_days", { valueAsNumber: true })} />
       </div>
 
       {/* Buttons */}

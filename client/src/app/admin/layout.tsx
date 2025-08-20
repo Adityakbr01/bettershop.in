@@ -14,9 +14,8 @@ function DashboardLayout({
         <div className="flex min-h-screen w-full">
             <DashboardWithSidebar />
             <div className="flex-1">
-                <ProtectedRoute allowedRoles={[APP_CONSTANTS.userRole.USER]}>
-                    {children}
-                </ProtectedRoute>
+
+                {children}
             </div>
         </div>
 
@@ -24,4 +23,4 @@ function DashboardLayout({
 }
 
 
-export default withAuth(DashboardLayout)
+export default (DashboardLayout)
