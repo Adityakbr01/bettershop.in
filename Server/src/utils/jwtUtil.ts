@@ -15,7 +15,7 @@ if (!jwtSecret) {
 
 export const generateAuthToken = (payload: TokenPayload): string => {
   return jwt.sign(payload, jwtSecret as string, {
-    expiresIn: constant.ENV.ACCESSTOKEN_EXPIRES_IN // 60 min
+    expiresIn: constant.ENV.ACCESSTOKEN_EXPIRES_IN // 1 hour
   });
 };
 

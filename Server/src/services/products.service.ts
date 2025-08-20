@@ -1,4 +1,5 @@
 // src/services/productsService.ts
+import { prisma } from "@/db";
 import { productsRepository } from "@/repository/products.repository";
 import { ApiError } from "@utils/ApiError";
 
@@ -13,12 +14,12 @@ export interface CreateProductType {
   size_chart?: string;
   payment_options?: string[];
   estimated_delivery_days?: number;
-  active: boolean;
-  stock: number;
+  active?: boolean;
+  stock?: number;
   sku: string;
 }
 const productsService = {
-createProduct: async (data: CreateProductType) => {
+  createProduct: async (data: CreateProductType) => {
     // Check if slug already exists
     const existingProduct = await productsRepository.findProductBySlug(data.slug);
     if (existingProduct) {
@@ -26,7 +27,11 @@ createProduct: async (data: CreateProductType) => {
     }
 
     // Create new product
-    const product = await productsRepository.createProduct(data);
+    const product = await productsRepository.createProduct({
+      ...data,
+      active: false,
+      stock: 0
+    });
 
     // Optional: sanitize fields if needed
     return product;
@@ -35,10 +40,17 @@ createProduct: async (data: CreateProductType) => {
     const product = await productsRepository.findProducts();
     return product;
   },
+  getProductById: async (id: string) => {
+    const product = await prisma.product.findUnique({
+      where: { id: Number(id) },
+      include: { variants: true }
+    });
+    return product
+  },
   createCategory: async (data: {
     name: string;
     slug: string;
-    parent_category_id?: number;
+    parent_category_id?: number | null;
   }) => {
     // Create new category
     const category = await productsRepository.createCategory(data);

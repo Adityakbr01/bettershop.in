@@ -53,8 +53,6 @@ export const ProductSchema = z.object({
     z.number().int().positive("Estimated days must be a positive integer")
   ),
   sku: z.string(),
-  stock: z.number().min(0),
-  active: z.boolean(),   // 👈 required kar diya
 });
 
 
@@ -64,5 +62,6 @@ export const CategorySchema = z.object({
     .string()
     .min(1, "Slug is required")
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use kebab-case: letters, numbers, dashes"),
-  parent_category_id: z.number().optional(),
+  parent_category_id: z.number().nullable().optional(), // ✅ allows null or undefined
 });
+

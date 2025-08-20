@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* any-disable no-console */
 
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";

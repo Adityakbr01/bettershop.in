@@ -23,7 +23,7 @@ export const constant = {
     JWT_SECRET: process.env.JWT_SECRET || "secret",
     GITHUB_CALLBACK_URL: process.env.GITHUB_CALLBACK_URL || "http://localhost:5000/api/v1/auth/github/callback",
     GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL || "http://localhost:5000/api/v1/auth/google/callback",
-    ACCESSTOKEN_EXPIRES_IN: 60 * 60 * 1000 // 60 min
+    ACCESSTOKEN_EXPIRES_IN: (60 * 60) // 1 hour
   } as const,
 
   // Role names in the system

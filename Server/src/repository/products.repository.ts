@@ -7,7 +7,6 @@ export const productsRepository = {
             where: { slug }
         });
     },
-
     createProduct: async (data: CreateProductType) => {
         return prisma.product.create({
             data
@@ -17,6 +16,7 @@ export const productsRepository = {
         const products = await prisma.product.findMany({
             include: {
                 category: true, // 👈 category relation laa raha hai
+                variants:true
             },
         });
         return products;
@@ -24,7 +24,7 @@ export const productsRepository = {
     createCategory: async (data: {
         name: string;
         slug: string;
-        parent_category_id?: number;
+        parent_category_id?: number | null;
     }) => {
         return prisma.category.create({
             data

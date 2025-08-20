@@ -18,17 +18,17 @@ const authController = {
 
     const accessToken = generateAuthToken({ id: user.id, email: user.email });
 
-    res.cookie("accessToken", accessToken, getCookieConfig());
+   res.cookie("accessToken", accessToken, getCookieConfig());
     sendSuccess(res, 200, "Signin successful", user);
   }),
 
   logout: wrapAsync(async (_req: Request, res: Response) => {
-    res.clearCookie("accessToken", getCookieConfig());
+    res.clearCookie("accessToken");
     sendSuccess(res, 200, "Logout successful");
   }),
 
   getMe: wrapAsync(async (req: Request, res: Response) => {
-    if(!req.user){
+    if (!req.user) {
       throw new Error("User not found");
     }
     const user = await authService.getMe(req.user.email);

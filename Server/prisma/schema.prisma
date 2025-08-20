@@ -127,13 +127,13 @@ model Product {
   slug                    String            @unique
   description             String?
   base_price              Float
-  category_id             Int
-  category                Category          @relation(fields: [category_id], references: [id])
-  size_chart              Json?
+  category_id             Int?
+  category                Category?         @relation(fields: [category_id], references: [id])
+  size_chart              Json?             //
   created_at              DateTime          @default(now())
   updated_at              DateTime          @updatedAt
   images                  ProductImage[]
-  variants                ProductVariant[]
+  variants                ProductVariant[]  //
   reviews                 Review[]
   coupons                 CouponOnProduct[]
   orders                  OrderItem[]
@@ -147,7 +147,7 @@ model Product {
   //New filed
   active Boolean @default(true)
   stock  Int     @default(0)
-  sku    String  @default("") // ya agar har product ka unique SKU chahiye to @unique
+  sku    String  @unique
 }
 
 model ProductImage {
@@ -161,11 +161,11 @@ model ProductImage {
 
 model ProductVariant {
   id             Int             @id @default(autoincrement())
-  product        Product         @relation(fields: [product_id], references: [id])
+  product        Product         @relation(fields: [product_id], references: [id],onDelete: Cascade)
   product_id     Int
   sku            String          @unique
   price          Float
-  attributes     Json // e.g., { color: "red", size: "M" }
+  attributes     Json? // e.g., { color: "red", size: "M" }
   stock_level    Int?
   rating_avg     Float?          @default(0)
   total_reviews  Int?            @default(0)
