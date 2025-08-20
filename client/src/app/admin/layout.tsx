@@ -1,9 +1,6 @@
 "use client"
 
-import ProtectedRoute from "@/components/auth/ProtectedRoute"
-import { withAuth } from "@/components/auth/withAuth"
 import DashboardWithSidebar from "@/components/shadcn-dashboard"
-import { APP_CONSTANTS } from "@/constants"
 
 function DashboardLayout({
     children,
